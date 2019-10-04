@@ -20,6 +20,11 @@ class Router extends RouteLoader
             $group->get('/admin/login', $this->to('Admin\Auth', 'login'), 'admin_login');
         });
 
+        $routing->post('/api/admin/login', $this->to('Admin\Auth', 'login'), 'api_admin_login');
+        $routing->group('/api/admin', function ($group) {
+
+        });
+
         $routing->group('/admin', function ($group) {
             $group->get('/', $this->to('Admin\Dashboard', 'index'), 'admin/');
             $group->get('', $this->to('Admin\Dashboard', 'index'), 'admin');

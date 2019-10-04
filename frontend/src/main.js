@@ -11,7 +11,13 @@ Vue.config.productionTip = false
 Vue.use(Antd)
 Vue.use(responsive)
 
-router.afterEach((current, after) => {
+// const waitForStorageToBeReady = async (to, from, next) => {
+//   await store.restored
+//   next()
+// }
+// router.beforeEach(waitForStorageToBeReady)
+
+router.afterEach(current => {
   store.state.activeMenu.pop()
   store.state.activeMenu.push(current.name)
 })

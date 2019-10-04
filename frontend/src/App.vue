@@ -43,6 +43,11 @@ export default {
     setTimeout(() => {
       app.loaderVisible = false
     }, 500)
+    // this.$store.state.name = 'Nguyen'
+    this.$store.commit('setName', {
+      name: 'Nguyen Hai Quang'
+    })
+    console.log(this.$store.state.name)
   },
   methods: {
   }

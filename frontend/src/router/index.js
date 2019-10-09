@@ -7,10 +7,12 @@ import isGuest from './middleware/isGuest'
 Vue.use(Router)
 
 const routes = {
-  '/': ['Dashboard', 'dashboard', [isLoggedIn]],
-  '/login': ['Login', 'login', [isGuest]],
-  '/setting': ['Setting', 'setting', [isLoggedIn]],
-  '/profile': ['Profile', 'profile', [isLoggedIn]],
+  '/': ['Dashboard', 'dashboard', { active: 'dashboard', use_layout: true, label: 'Dashboard', name: 'Dashboard' }, [isLoggedIn]],
+  '/login': ['Login', 'login', { use_layout: false }, [isGuest]],
+  '/setting': ['Setting', 'setting', { active: 'setting', use_layout: true, label: 'Setting', name: 'Setting' }, [isLoggedIn]],
+  '/posts': ['posts/List', 'post_list', { active: 'post', use_layout: true, label: 'Posts', name: 'ListPost' }, [isLoggedIn]],
+  '/posts/new': ['posts/New', 'post_new', { active: 'post', use_layout: true, label: 'New Post', name: 'NewPost' }, [isLoggedIn]],
+  '/profile': ['Profile', 'profile', { active: 'profile', use_layout: true, label: 'Profile', name: 'Profile' }, [isLoggedIn]],
 }
 
 const vueRoutes = []
@@ -21,7 +23,8 @@ for (let path in routes) {
     path,
     component: () => import('@/views/' + options[0]),
     name: options[1],
-    beforeEnter: multiguard(options[2] || []),
+    meta: options[2] || {},
+    beforeEnter: multiguard(options[3] || []),
   })
 }
 

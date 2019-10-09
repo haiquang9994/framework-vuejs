@@ -4,6 +4,8 @@ namespace App\Http\Controller\Admin;
 
 use App\Lib\Jwt\Jwt;
 use App\Service\AdminService;
+use App\Service\DBService;
+use App\Service\TokenService;
 
 class AuthController extends Controller
 {
@@ -20,6 +22,10 @@ class AuthController extends Controller
                 'roles' => $admin->roles,
                 'time' => time(),
             ], env('APP_KEY', 'app_key'));
+            $this->container->get(TokenService::class)->insert([
+                'token' => $token,
+                'admin_id' => $admin->id,
+            ]);
             return $this->json([
                 'status' => true,
                 'token' => $token,
@@ -38,11 +44,14 @@ class AuthController extends Controller
         ]);
     }
 
-    public function get2()
+    public function logout()
     {
+        if ($this->container->has('__token')) {
+            $token = $this->container->get('__token');
+            $this->container->get(TokenService::class)->where('token', $token)->delete();
+        }
         return $this->json([
-            'a' => 'b',
-            'c' => 'd',
+            'status' => true,
         ]);
     }
 }

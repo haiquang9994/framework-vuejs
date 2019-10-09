@@ -7,9 +7,17 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     __: false,
-    activeMenu: [],
     user_data: {},
-    me_loaded: false
+    me_loaded: false,
+    token: null,
+    layout: {
+      use_layout: false,
+      tabs: [
+        { name: 'dashboard', label: 'Dashboard', path: '/', component: 'Dashboard' }
+      ],
+      tab_history: ['dashboard']
+    },
+    activeMenu: [],
   },
   getters: {
   },

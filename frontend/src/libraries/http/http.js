@@ -1,4 +1,3 @@
-import axios from 'axios'
 import axios_get from './axios/get'
 import axios_post from './axios/post'
 import axios_put from './axios/put'

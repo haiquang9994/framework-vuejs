@@ -1,6 +1,9 @@
 <template>
   <div>
-    <page-title title="Dashboard"></page-title>
+    <page-title title="Posts">
+      <router-link class="ant-btn ant-btn-primary" to="/posts/new">New</router-link>
+    </page-title>
+    <input type="text">
   </div>
 </template>
 
@@ -8,7 +11,7 @@
 import PageTitle from "@/components/PageTitle"
 
 export default {
-  name: 'Dashboard',
+  name: 'ListPost',
   components: {
     PageTitle
   },

@@ -6,8 +6,14 @@ import Antd from 'ant-design-vue'
 import responsive from 'vue-responsive'
 import http from './libraries/http'
 import helpers from './libraries/helpers'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import tinymce from 'vue-tinymce-editor'
 
 import 'ant-design-vue/dist/antd.css'
+
+library.add(fas)
 
 Vue.config.productionTip = false
 
@@ -16,17 +22,34 @@ Vue.use(responsive)
 Vue.use(http)
 Vue.use(helpers)
 
-// process.env.VUE_APP_API_ENDPOINT + 'me'
-
-// const waitForStorageToBeReady = async (to, from, next) => {
-//   await store.restored
-//   next()
-// }
-// router.beforeEach(waitForStorageToBeReady)
+Vue.component('fai', FontAwesomeIcon)
+Vue.component('editor', tinymce)
 
 router.afterEach(current => {
-  store.state.activeMenu.pop()
-  store.state.activeMenu.push(current.name)
+  let use_layout = store.state.layout.use_layout = current.meta.use_layout || false
+  if (current.meta.active) {
+    store.state.activeMenu.pop()
+    store.state.activeMenu.push(current.meta.active)
+  }
+  if (use_layout) {
+    let check = store.state.layout.tabs.filter(tab => {
+      return tab.name === current.name
+    }).length
+    if (check === 0) {
+      store.state.layout.tabs.push({
+        name: current.name,
+        path: current.path,
+        label: current.meta.label,
+        component: current.meta.name,
+      })
+    }
+    let i = store.state.layout.tab_history.indexOf(current.name)
+    if (i > -1) {
+      store.state.layout.tab_history.splice(i, 1)
+    }
+    store.state.layout.tab_history.push(current.name)
+    store.state.layout.active_tab = current.name
+  }
 })
 
 new Vue({

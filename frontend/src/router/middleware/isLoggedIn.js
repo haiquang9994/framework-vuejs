@@ -16,7 +16,7 @@ export default (to, from, next) => {
         store.state.me_loaded = true
         next()
       })
-      .catch(e => {
+      .catch(() => {
         store.state.token = null
         store.commit('save')
         next('/login')

@@ -5,9 +5,9 @@ namespace App\Http\Middleware;
 use App\Lib\Jwt\Jwt;
 use App\Model\Admin;
 use App\Service\AdminService;
+use App\Service\TokenService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,16 +26,19 @@ class ApiAdminMiddleware
         preg_match("/Bearer (.*)/", $authorization, $matchs);
         $token = $matchs[1] ?? null;
         if (is_string($token) && $data = $this->container->get(Jwt::class)->decode($token, env('APP_KEY', 'app_key'))) {
-            $duration = intval(env('TOKEN_DURATION', 3600));
-            if ((time() - $data->time) > $duration) {
-                return new JsonResponse([
-                    'status' => false,
-                ], 401);
-            }
-            $admin = $this->container->get(AdminService::class)->find($data->id);
-            if ($admin instanceof Admin && $admin->active) {
-                $this->container->set('__authed', $admin);
-                return;
+            if ($tokenModel = $this->container->get(TokenService::class)->where('token', $token)->first()) {
+                $admin = $tokenModel->admin;
+                if ($admin instanceof Admin && $admin->active) {
+                    $this->container->set('__authed', $admin);
+                    $this->container->set('__token', $token);
+                    return;
+                }
+                // $duration = intval(env('TOKEN_DURATION', 3600));
+                // if ((time() - $data->time) > $duration) {
+                //     return new JsonResponse([
+                //         'status' => false,
+                //     ], 401);
+                // }
             }
         }
         return new JsonResponse([

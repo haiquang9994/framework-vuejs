@@ -59,8 +59,8 @@ export default {
     handleSubmit(e) {
       e.preventDefault()
       this.logging = true
-      let r = this.$http
-        .post("http://framework.lc/api/admin/login")
+      this.$http
+        .post(process.env.VUE_APP_API_ENDPOINT + "login")
         .withBody({
           email: "admin@gmail.com",
           password: "1234"
@@ -68,13 +68,13 @@ export default {
         .sent()
         .then(body => {
           if (body.status && body.token) {
-            this.logging = true
-            this.$c({ token: body.token, user_data: body.user_data }, true)
+            this.logging = false
+            this.$c({ token: body.token, user_data: body.user_data, me_loaded: true }, true)
             this.$router.push('/')
           }
         })
         .catch(() => {
-          this.logging = true
+          this.logging = false
         })
     }
   }

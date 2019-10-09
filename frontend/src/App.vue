@@ -1,19 +1,23 @@
 <template>
-  <div>
-    <router-view></router-view>
+  <section>
+    <main-layout v-if="$store.state.layout.use_layout"></main-layout>
+    <router-view v-else></router-view>
     <loading id="loader-wrapper" :active.sync="loaderVisible" loader="dots"></loading>
-  </div>
+  </section>
 </template>
 <script>
 import Loading from 'vue-loading-overlay'
+import MainLayout from "@/layout/MainLayout"
 
 export default {
   components: {
     Loading,
+    MainLayout
   },
   data() {
     return {
-      loaderVisible: true
+      loaderVisible: true,
+      use_layout: null
     }
   },
   mounted () {

@@ -6,7 +6,10 @@
       <a-menu theme="dark" v-model="$store.state.activeMenu">
         <a-menu-item v-for="nav in navs" :key="nav.key">
           <router-link :to="nav.link">
-            <a-icon :type="nav.icon" />
+            <i class="awesome-icon" v-if="nav.icon.provider === 'awesome'">
+              <fai :icon="['fas', nav.icon.key]" />
+            </i>
+            <a-icon v-else :type="nav.icon.key" />
             <span class="nav-text">{{ nav.text }}</span>
           </router-link>
         </a-menu-item>

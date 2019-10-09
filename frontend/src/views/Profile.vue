@@ -1,6 +1,6 @@
 <template>
-  <main-layout>
-    <h4 class="page-title">Profile</h4>
+  <div>
+    <page-title title="Profile"></page-title>
     <a-form :form="form">
       <a-form-item label="Fullname" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
         <a-input v-model="profile.fullname"></a-input>
@@ -14,15 +14,16 @@
         </div>
       </a-form-item>
     </a-form>
-  </main-layout>
+  </div>
 </template>
 
 <script>
-import MainLayout from "@/layout/MainLayout"
+import PageTitle from "@/components/PageTitle"
 
 export default {
+  name: 'Profile',
   components: {
-    MainLayout
+    PageTitle
   },
   data() {
     return {
@@ -36,7 +37,7 @@ export default {
   },
   methods: {
     submit() {
-      this.$http.put(process.env.VUE_APP_API_ENDPOINT + 'me')
+      this.$http.put(process.env.API_ENDPOINT + 'me')
         .withBody({
           fullname: this.profile.fullname
         })

@@ -1,15 +1,16 @@
 <template>
-  <main-layout>
-    <h4 class="page-title">Setting</h4>
-  </main-layout>
+  <div>
+    <page-title title="Setting"></page-title>
+  </div>
 </template>
 
 <script>
-import MainLayout from "@/layout/MainLayout";
+import PageTitle from "@/components/PageTitle"
 
 export default {
+  name: 'Setting',
   components: {
-    MainLayout
+    PageTitle
   },
   data() {
     return {

@@ -8,7 +8,7 @@ class Admin extends AbstractSeed
     {
         $this->insert('admins', [
             'email' => 'admin@gmail.com',
-            'password' => '$2y$10$PXTZ8FP25K8yekZp37trgeeZl7t3nijy4w5eu31VxgA.NIl7op1FS',
+            'password' => '$2y$10$dBJK.bL9im5AjCaelExyoum.0NuarSQ1pBlSYFN7/MOWoTufjE5H2',
             'fullname' => 'Admin',
             'roles' => '["ADMIN"]',
             'active' => true,

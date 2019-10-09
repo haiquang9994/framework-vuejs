@@ -23,12 +23,11 @@
           <a-dropdown class="header-item" id="account-options" :trigger="['click']">
             <span>
               <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-              <span>Quang</span>
+              <span>{{ $store.state.user_data.fullname }}</span>
             </span>
             <a-menu slot="overlay">
-              <a-menu-item @click="open('/')"><a-icon type="user" />Dashboard</a-menu-item>
               <a-menu-item @click="open('/profile')"><a-icon type="user" />Profile</a-menu-item>
-              <a-menu-item><a-icon type="user" />Sign out</a-menu-item>
+              <a-menu-item @click="logout"><a-icon type="logout" />Sign out</a-menu-item>
             </a-menu>
           </a-dropdown>
         </div>
@@ -55,6 +54,10 @@ export default {
         open(path) {
             router.push(path).catch(() => {})
         },
+        logout() {
+          this.$c('token', null, true)
+          this.$router.replace('/login')
+        }
     }
 }
 </script>

@@ -14,4 +14,9 @@ class HomeController extends BaseController
     {
         return $this->redirectFor('admin');
     }
+
+    public function options()
+    {
+        return $this->json([]);
+    }
 }

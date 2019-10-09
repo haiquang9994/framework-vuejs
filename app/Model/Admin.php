@@ -29,4 +29,9 @@ class Admin extends Base
     {
         return $this->roles;
     }
+
+    public function verify(string $password)
+    {
+        return password_verify($password, $this->password);
+    }
 }

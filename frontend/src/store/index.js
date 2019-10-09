@@ -6,20 +6,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    __: false,
     activeMenu: [],
-    token: null,
+    user_data: {},
+    me_loaded: false
   },
   getters: {
-    name (state) {
-      return state.name
-    }
   },
   mutations: {
-    setToken(state, params) {
-      state.token = params.token
-    },
-    setName(state, params) {
-      state.name = params.name      
+    save(state) {
+      state.__ = !state.__
     }
   },
   actions: {
@@ -27,6 +23,7 @@ export default new Vuex.Store({
   },
   plugins: [createPersistedState({
     storage: window.localStorage,
-    key: '__fw__'
+    key: '__fw__',
+    paths: ['__', 'token']
   })]
 })

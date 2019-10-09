@@ -1,5 +1,53 @@
 <template>
-    <div>
-        Profile
-    </div>
+  <main-layout>
+    <h4 class="page-title">Profile</h4>
+    <a-form :form="form">
+      <a-form-item label="Fullname" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+        <a-input v-model="profile.fullname"></a-input>
+      </a-form-item>
+      <a-form-item label="Email" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+        <a-input v-model="profile.email" :readOnly="true"></a-input>
+      </a-form-item>
+      <a-form-item :label-col="{ span: 5 }">
+        <div class="ant-col-12 ant-col-offset-5">
+          <a-button :loading="logging" type="primary" @click="submit">Save</a-button>
+        </div>
+      </a-form-item>
+    </a-form>
+  </main-layout>
 </template>
+
+<script>
+import MainLayout from "@/layout/MainLayout"
+
+export default {
+  components: {
+    MainLayout
+  },
+  data() {
+    return {
+      form: this.$form.createForm(this),
+      logging: false,
+      profile: {
+        fullname: this.$store.state.user_data.fullname,
+        email: this.$store.state.user_data.email,
+      }
+    }
+  },
+  methods: {
+    submit() {
+      this.$http.put(process.env.VUE_APP_API_ENDPOINT + 'me')
+        .withBody({
+          fullname: this.profile.fullname
+        })
+        .authed(this.$store.state.token)
+        .sent()
+        .then(body => {
+          if (body.status) {
+            this.$store.state.user_data = body.user_data
+          }
+        })
+    }
+  }
+}
+</script>

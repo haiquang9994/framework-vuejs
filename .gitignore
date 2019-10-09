@@ -142,4 +142,4 @@ storage/log/**
 !storage/log/.gitkeep
 storage/cache/**
 !storage/cache/.gitkeep
-
+public/admin

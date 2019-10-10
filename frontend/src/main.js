@@ -7,13 +7,14 @@ import responsive from 'vue-responsive'
 import http from './libraries/http'
 import helpers from './libraries/helpers'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
+import { fas, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import tinymce from 'vue-tinymce-editor'
 
 import 'ant-design-vue/dist/antd.css'
 
 library.add(fas)
+library.add(faLongArrowAltUp)
 
 Vue.config.productionTip = false
 
@@ -23,7 +24,7 @@ Vue.use(http)
 Vue.use(helpers)
 
 Vue.component('fai', FontAwesomeIcon)
-Vue.component('editor', tinymce)
+Vue.component('tinymce-editor', tinymce)
 
 router.afterEach(current => {
   let use_layout = store.state.layout.use_layout = current.meta.use_layout || false

@@ -143,3 +143,4 @@ storage/log/**
 storage/cache/**
 !storage/cache/.gitkeep
 public/admin
+public/photos

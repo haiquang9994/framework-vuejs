@@ -12,7 +12,9 @@ const routes = {
   '/setting': ['Setting', 'setting', { active: 'setting', use_layout: true, label: 'Setting', name: 'Setting' }, [isLoggedIn]],
   '/posts': ['posts/List', 'post_list', { active: 'post', use_layout: true, label: 'Posts', name: 'ListPost' }, [isLoggedIn]],
   '/posts/new': ['posts/New', 'post_new', { active: 'post', use_layout: true, label: 'New Post', name: 'NewPost' }, [isLoggedIn]],
+  // '/posts/new': ['popups/Finder', 'post_new', { active: 'post', use_layout: true, label: 'New Post', name: 'NewPost' }, [isLoggedIn]],
   '/profile': ['Profile', 'profile', { active: 'profile', use_layout: true, label: 'Profile', name: 'Profile' }, [isLoggedIn]],
+  '/finder/popup': ['finder/Popup.vue', 'finder_popup', {}, [isLoggedIn]],
 }
 
 const vueRoutes = []

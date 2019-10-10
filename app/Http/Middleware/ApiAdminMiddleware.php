@@ -25,7 +25,10 @@ class ApiAdminMiddleware
         $authorization = $request->headers->get('authorization');
         preg_match("/Bearer (.*)/", $authorization, $matchs);
         $token = $matchs[1] ?? null;
-        if (is_string($token) && $data = $this->container->get(Jwt::class)->decode($token, env('APP_KEY', 'app_key'))) {
+        if ($token === null) {
+            $token = $request->query->get('_token');
+        }
+        if (is_string($token) && $this->container->get(Jwt::class)->decode($token, env('APP_KEY', 'app_key'))) {
             if ($tokenModel = $this->container->get(TokenService::class)->where('token', $token)->first()) {
                 $admin = $tokenModel->admin;
                 if ($admin instanceof Admin && $admin->active) {

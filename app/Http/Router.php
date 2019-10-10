@@ -24,6 +24,8 @@ class Router extends RouteLoader
 
         $routing->post('/api/admin/login', $this->to('Admin\Auth', 'login'), 'api_admin_login');
         $routing->group('/api/admin', function ($group) {
+            $group->get('/finder/popup', $this->to('Admin\Finder', 'popup'), '');
+            $group->post('/finder/connector', $this->to('Admin\Finder', 'connector'), '');
             $group->get('/me', $this->to('Admin\Dashboard', 'me'), 'api_admin_me');
             $group->put('/me', $this->to('Admin\Dashboard', 'putMe'), 'api_admin_put_me');
             $group->delete('/logout', $this->to('Admin\Auth', 'logout'), 'api_admin_logout');

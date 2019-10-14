@@ -1,6 +1,7 @@
 <template>
     <ul>
         <li v-for="(item, key) in directories" :key="key">
+            <i>{{ item.children === null ? '+' : '-' }}</i>
             <span @click="click(item)" :class="{active: data.active == item.path}">{{ item.label }}</span>
             <directory :directories="item.children" @click="clickChild" :data="data" />
         </li>

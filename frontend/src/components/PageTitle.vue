@@ -1,15 +1,15 @@
 <template>
-  <div class="page-title">
-    <h4>{{ title }}</h4>
-    <div class="page-title-actions">
-      <slot />
+    <div class="page-title">
+        <h4>{{ title }}</h4>
+        <div class="page-title-actions">
+            <slot />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'PageTitle',
-  props: ['title']
-};
+    name: 'PageTitle',
+    props: ['title']
+}
 </script>

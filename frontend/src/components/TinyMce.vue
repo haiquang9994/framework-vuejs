@@ -14,6 +14,16 @@ export default {
                 statusbar: false,
                 file_browser_callback(field_name, url, type, win) {
                     let activeUrl = ''
+                    let closest = (element, class_name) => {
+                        let node = element
+                        while (node.tagName.toLowerCase() !== 'body') {
+                            if (node.classList.contains(class_name)) {
+                                return node
+                            }
+                            node = node.parentNode
+                        }
+                        return null
+                    }
                     tinymce.activeEditor.windowManager.open(
                         {
                             file: '/admin/finder/popup',
@@ -38,8 +48,18 @@ export default {
                             ]
                         },
                         {
-                            setUrl(url) {
-                                win.document.getElementById(field_name).value = url
+                            setUrl(url, width, height) {
+                                let field = win.document.getElementById(field_name)
+                                field.value = url
+                                let box = closest(field, 'mce-form')
+                                let dimension_box = box.querySelectorAll('.mce-container.mce-abs-layout-item.mce-container')[2]
+                                let inputs = dimension_box.querySelectorAll('.mce-container.mce-abs-layout-item input')
+                                if (width > 600) {
+                                    height = parseInt(height * 600 / width)
+                                    width = 600
+                                }
+                                inputs[0].value = width
+                                inputs[1].value = height
                             },
                             setActiveUrl(url) {
                                 activeUrl = url

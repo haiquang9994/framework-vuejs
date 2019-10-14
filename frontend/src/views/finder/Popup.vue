@@ -191,7 +191,7 @@ export default {
                 this.data.selected.push(item.url)
                 this.data.item_active = item.filename
                 let params = window.parent.tinymce.activeEditor.windowManager.getParams()
-                let setUrl = params.setActiveUrl(item.url)
+                params.setActiveUrl(item.url)
             } else {
                 let i = this.data.selected.indexOf(item.url)
                 this.data.selected.splice(i, 1)
@@ -199,7 +199,7 @@ export default {
         },
         chooseItem(item) {
             let params = window.parent.tinymce.activeEditor.windowManager.getParams()
-            let setUrl = params.setUrl(item.url)
+            params.setUrl(item.url, item.size.width, item.size.height)
             window.parent.tinymce.activeEditor.windowManager.close()
         },
         clickDirectory(item) {
@@ -219,6 +219,7 @@ export default {
             return list.join('/')
         },
         listContents(path) {
+            this.new_items = []
             this.$c('__finder_dir', path, true)
             this.data.parent_folder = this.findParentPath(path)
             this.data.active = path
@@ -313,19 +314,13 @@ export default {
     0% {
         opacity: 0;
     }
-    20% {
+    30% {
         opacity: 1;
-    }
-    40% {
-        opacity: 0;
     }
     60% {
-        opacity: 1;
-    }
-    80% {
         opacity: 0;
     }
-    100% {
+    90% {
         opacity: 1;
     }
 }
@@ -531,8 +526,9 @@ export default {
             cursor: pointer;
             transition: background-color 200ms;
             .fm-file-name {
-                line-height: 18px;
-                max-height: 54px;
+                font-size: 9px;
+                line-height: 13px;
+                max-height: 39px;
                 overflow: hidden;
             }
             .fm-file-img {
@@ -555,7 +551,7 @@ export default {
                 background-color: #dadada;
             }
             &.new_item {
-                animation: new_item 1500ms;
+                animation: new_item 500ms;
             }
         }
     }

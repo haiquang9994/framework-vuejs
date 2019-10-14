@@ -4,11 +4,19 @@ namespace App\Http\Controller\Admin;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
-use Cocur\Slugify\Slugify;
 
 class FinderController extends Controller
 {
-    const ROOT = 'http://framework.lc/photos/';
+    const STATIC_URL = 'http://framework.lc/photos/';
+    const ROOT_FILES = ROOT_PATH . '/public/photos';
+
+    protected function getOpts()
+    {
+        return [
+            'static_url' => 'http://framework.lc/photos/',
+            'root_files' => ROOT_PATH . '/public/photos',
+        ];
+    }
 
     public function popup()
     {
@@ -18,7 +26,21 @@ class FinderController extends Controller
     public function connector()
     {
         if ($command = $this->getCommand()) {
-            $adapter = new Local(ROOT_PATH . '/public/photos');
+            $path = $this->request->request->get('path');
+            $filesystem = new \App\Lib\Filesystem\Local();
+            if ($command === 'open_dir') {
+                return $this->json([
+                    'status' => true,
+                    'data' => $filesystem->listContents($path),
+                ]);
+            } elseif ($command === 'upload') {
+                $files = $this->request->files->all();
+                return $this->json([
+                    'status' => true,
+                    'data' => $filesystem->upload($path, $files),
+                ]);
+            }
+            $adapter = new Local(static::ROOT_FILES);
             $filesystem = new Filesystem($adapter);
             $method = "___$command";
             return $this->$method($filesystem);
@@ -67,41 +89,6 @@ class FinderController extends Controller
         return $data;
     }
 
-    protected function ___upload(Filesystem $filesystem)
-    {
-        $path = $this->request->request->get('path');
-        $files = $this->request->files->all();
-        $data = [];
-        foreach ($files as $name => $file) {
-            if ($file->isValid()) {
-                $ext = $file->guessExtension();
-                $client_original_name = $file->getClientOriginalName();
-                $filename = $this->container->get(Slugify::class)->slugify(substr($client_original_name, 0, strrpos($client_original_name, '.'))) . '_' . substr(md5($name . time()), 0, 8);
-                $basename = $filename . '.' . $ext;
-                $filepath = trim($path, '/') . '/' . $basename;
-                if ($filesystem->has($filepath)) {
-                    $filesystem->delete($filepath);
-                }
-                $stream = fopen($file->getRealPath(), 'r+');
-                $filesystem->writeStream($filepath, $stream);
-                fclose($stream);
-                $info = $filesystem->getMetadata($filepath);
-                $data[] = [
-                    'path' => './' . $info['path'],
-                    'filename' => $filename,
-                    'basename' => $basename,
-                    'extension' => $ext,
-                    'url' => static::ROOT . $info['path'],
-                    'thumb' => static::ROOT . $info['path'],
-                ];
-            }
-        }
-        return $this->json([
-            'status' => true,
-            'data' => $data,
-        ]);
-    }
-
     protected function ___create_dir(Filesystem $filesystem)
     {
         $path = $this->request->request->get('path');
@@ -121,41 +108,5 @@ class FinderController extends Controller
             'url' => $url,
             'thumb' => $thumb,
         ];
-    }
-
-    protected function ___open_dir(Filesystem $filesystem)
-    {
-        $path = $this->request->request->get('path');
-        $items = $filesystem->listContents($path);
-        $data = [
-            'files' => [],
-            'folders' => [],
-            'root' => $this->getRootTree($filesystem, $path),
-        ];
-        usort($items, function ($a ,$b) {
-            return $a['timestamp'] > $b['timestamp'] ? -1 : 1;
-        });
-        foreach ($items as $item) {
-            $type = $item['type'];
-            if (strpos($item['basename'], '.') === 0) {
-                break;
-            }
-            if ($type === 'file') {
-                $data['files'][] = $this->file(
-                    $item['basename'], $item['filename'], './' . $item['path'],
-                    $item['extension'], static::ROOT . $item['path'], static::ROOT . $item['path']
-                );
-            } elseif ($type === 'dir') {
-                $data['folders'][] = [
-                    'path' => './' . $item['path'],
-                    'basename' => $item['basename'],
-                    'filename' => $item['filename'],
-                ];
-            }
-        }
-        return $this->json([
-            'status' => true,
-            'data' => $data,
-        ]);
     }
 }

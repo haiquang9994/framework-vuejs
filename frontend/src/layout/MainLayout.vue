@@ -25,7 +25,7 @@
                 </ul>
                 <div :style="{ padding: '18px', background: '#fff', minHeight: '360px' }">
                     <keep-alive :include="includeViews">
-                        <router-view></router-view>
+                        <router-view :key="$route.fullPath"></router-view>
                     </keep-alive>
                     <slot />
                 </div>

@@ -5,6 +5,9 @@ namespace App\Service;
 use Illuminate\Database\Capsule\Manager;
 use Psr\Container\ContainerInterface;
 use Evenement\EventEmitterTrait;
+use Illuminate\Database\Eloquent\Model;
+use Cocur\Slugify\Slugify;
+use PDO;
 
 abstract class BaseService
 {
@@ -38,6 +41,26 @@ abstract class BaseService
         }
 
         return $this;
+    }
+
+    public function createNew(array $data = []): Model
+    {
+        $model = $this->model;
+        return new $model($data);
+    }
+
+    public function getPdo(): PDO
+    {
+        return $this->container->get(Manager::class)->getConnection('default')->getPdo();
+    }
+
+    protected function slugify(Model $model, array $fields): string
+    {
+        $content = '';
+        foreach ($fields as $field) {
+            $content .= $model->{$field};
+        }
+        return $this->container->get(Slugify::class)->slugify($content);
     }
 
     public function boot()

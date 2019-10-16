@@ -9,7 +9,6 @@ import helpers from './libraries/helpers'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import tinymce from 'vue-tinymce-editor'
 
 import 'ant-design-vue/dist/antd.css'
 
@@ -24,9 +23,9 @@ Vue.use(http)
 Vue.use(helpers)
 
 Vue.component('fai', FontAwesomeIcon)
-Vue.component('tinymce-editor', tinymce)
 
 router.afterEach(current => {
+    console.log(current.fullPath)
     let use_layout = store.state.layout.use_layout = current.meta.use_layout || false
     if (current.meta.active) {
         store.state.activeMenu.pop()
@@ -34,10 +33,12 @@ router.afterEach(current => {
     }
     if (use_layout) {
         let check = store.state.layout.tabs.filter(tab => {
-            return tab.name === current.name
+            return tab.fullPath === current.fullPath
+            // return tab.name === current.name
         }).length
         if (check === 0) {
             store.state.layout.tabs.push({
+                fullPath: current.fullPath,
                 name: current.name,
                 path: current.path,
                 label: current.meta.label,

@@ -43,9 +43,6 @@ class Request {
 }
 
 class Http {
-    constructor() {
-        this.authorization_token = null
-    }
     get(url) {
         let request = new Request(METHOD_GET, url)
         return request

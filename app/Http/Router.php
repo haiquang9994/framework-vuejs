@@ -17,18 +17,17 @@ class Router extends RouteLoader
     {
         $routing->group('/', function ($group) {
             $group->get('/', $this->to('Home', 'index'), 'home');
-            $group->post('/', $this->to('Home', 'index'), 'home2');
-            // $group->get('/quanly', $this->to('Home', 'quanly'), 'quanly');
-            // $group->get('/admin/login', $this->to('Admin\Auth', 'login'), 'admin_login');
         });
 
         $routing->post('/api/admin/login', $this->to('Admin\Auth', 'login'), 'api_admin_login');
         $routing->group('/api/admin', function ($group) {
-            $group->get('/finder/popup', $this->to('Admin\Finder', 'popup'), '');
-            $group->post('/finder/connector', $this->to('Admin\Finder', 'connector'), '');
+            $group->map('POST|GET', '/finder/connector', $this->to('Admin\Finder', 'connector'), 'finder_connector');
             $group->get('/me', $this->to('Admin\Dashboard', 'me'), 'api_admin_me');
             $group->put('/me', $this->to('Admin\Dashboard', 'putMe'), 'api_admin_put_me');
             $group->delete('/logout', $this->to('Admin\Auth', 'logout'), 'api_admin_logout');
+
+            $group->map('GET|POST', '/post', $this->to('Admin\Post', 'index'), 'api_admin_post');
+            $group->map('PUT|DELETE', '/post/{id}', $this->to('Admin\Post', 'index'), 'api_admin_post_');
         }, [
             '_before' => [
                 ApiAdminMiddleware::class,

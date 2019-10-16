@@ -1,75 +1,72 @@
 <template>
-    <tinymce-editor :id="key" :toolbar1="toolbar1" :other_options="other_options"></tinymce-editor>
+    <div>
+        <textarea ref="editor"></textarea>
+    </div>
 </template>
 
 <script>
 export default {
-    name: "TinyMce",
     data() {
         return {
-            key: "nsg5a998nolh72tlafkx9ah702obzpq1leytofu5dbnqie98",
-            toolbar1: 'undo redo | bold italic underline strikethrough superscript subscript | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | image media link table hr charmap | ltr rtl | fullscreen | code',
-            other_options: {
-                menubar: false,
-                statusbar: false,
-                file_browser_callback(field_name, url, type, win) {
-                    let activeUrl = ''
-                    let closest = (element, class_name) => {
-                        let node = element
-                        while (node.tagName.toLowerCase() !== 'body') {
-                            if (node.classList.contains(class_name)) {
-                                return node
-                            }
-                            node = node.parentNode
-                        }
-                        return null
-                    }
-                    tinymce.activeEditor.windowManager.open(
-                        {
-                            file: '/admin/finder/popup',
-                            title: 'File Manager',
-                            width: 900,
-                            height: 550,
-                            resizable: 'yes',
-                            buttons: [
-                                {
-                                    text: 'Insert',
-                                    onclick() {
-                                        if (activeUrl) {
-                                            win.document.getElementById(field_name).value = activeUrl
-                                        }
-                                        tinymce.activeEditor.windowManager.close()
-                                    }
-                                },
-                                {
-                                    text: 'Close',
-                                    onclick: 'close'
-                                }
-                            ]
-                        },
-                        {
-                            setUrl(url, width, height) {
-                                let field = win.document.getElementById(field_name)
-                                field.value = url
-                                let box = closest(field, 'mce-form')
-                                let dimension_box = box.querySelectorAll('.mce-container.mce-abs-layout-item.mce-container')[2]
-                                let inputs = dimension_box.querySelectorAll('.mce-container.mce-abs-layout-item input')
-                                if (width > 600) {
-                                    height = parseInt(height * 600 / width)
-                                    width = 600
-                                }
-                                inputs[0].value = width
-                                inputs[1].value = height
-                            },
-                            setActiveUrl(url) {
-                                activeUrl = url
-                            }
-                        }
-                    )
-                },
-                height: '300px'
-            }
+            content: ''
         }
+    },
+    methods: {
+        makeid(length) {
+            let result = '',
+                characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+                charactersLength = characters.length
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength))
+            }
+            return result
+        }
+    },
+    watch: {
+        content(value) {
+            this.$emit('input', value)
+        }
+    },
+    props: ['value'],
+    mounted() {
+        let vm = this
+        // this.content = this.value
+        let id = this.makeid(16)
+        this.$refs.editor.id = id
+        let token = this.$store.state.token
+        tinyMCE.init({
+            selector: '#' + id,
+            height: '600px',
+            plugins: 'code lists image media link table hr charmap directionality fullscreen',
+            toolbar: 'undo redo | bold italic underline strikethrough superscript subscript | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | image media link table hr charmap | ltr rtl | fullscreen | code',
+            menubar: false,
+            statusbar: false,
+            content_css: process.env.VUE_APP_WEB_URL + 'assets/content.css',
+            file_browser_callback(field_name, url, type, win) {
+                tinyMCE.activeEditor.windowManager.open({
+                    file: process.env.VUE_APP_WEB_URL + 'elfinder/index.html?_token=' + token,
+                    title: 'File Manager',
+                    width: win.innerWidth - 200,
+                    height: win.innerHeight - 200,
+                }, {
+                    window: win,
+                    input: field_name,
+                    setUrl(url) {
+                        document.getElementById(field_name).value = url
+                    }
+                });
+                return false;
+            },
+            init_instance_callback(editor) {
+                tinyMCE.get(id).setContent(vm.value)
+                editor.on('input', (e) => {
+                    vm.$emit('input', e.target.innerHTML)
+                })
+                editor.on('NodeChange', (e) => {
+                    vm.$emit('input', editor.getContent())
+                })
+            }
+        });
     }
 }
 </script>

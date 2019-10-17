@@ -122,8 +122,12 @@ abstract class ApiService extends BaseService
             'status' => true,
         ]);
         try {
-            $page = $request->query->get('_page', 1);
             $query = $this->queryGet();
+            $page = $request->query->get('_page', 1);
+            if ($orderBy = $request->query->get('_orderBy')) {
+                $orders = explode('.', $orderBy);
+                $query->orderBy($orders[0], $orders[1] ?? 'asc');
+            }
             $query->orderBy('id', 'desc');
             $records = $query->paginate(15, ['*'], '_page', $page);
             $result->data = $this->renderItems($records);

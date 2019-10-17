@@ -11,7 +11,7 @@
             :loading="loading"
             @change="handleTableChange"
         >
-            <span slot="action" slot-scope="record">
+            <div slot="action" slot-scope="record" class="table-record-actions">
                 <a-button size="small" icon="edit" @click="$go('/posts/' + record.id)" />
                 <span class="small-space"></span>
                 <a-popconfirm
@@ -24,7 +24,7 @@
                         <fai :icon="['fas', 'trash']" />
                     </a-button>
                 </a-popconfirm>
-            </span>
+            </div>
         </a-table>
     </div>
 </template>
@@ -61,27 +61,42 @@ export default {
                 total: 0,
                 pageSize: 0
             },
-            currentPage: 1
+            currentPage: 1,
+            sorter: {
+                field: null,
+                order: null
+            }
         }
     },
     methods: {
         handleTableChange(pagination, filters, sorter) {
             this.currentPage = pagination.current
+            this.sorter.field = sorter.field || null
+            this.sorter.order = sorter.order ? (sorter.order === 'ascend' ? 'asc' : 'desc') : null
             this.pull(pagination.current)
         },
         pull(page) {
-            this.loading = true
+            let vm = this
+            vm.loading = true
+            let data = {
+                _page: page
+            }
+            if (this.sorter.field) {
+                data._orderBy = this.sorter.field + '.' + this.sorter.order
+            }
             this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post')
                 .authed(this.$store.state.token)
-                .withBody({ _page: page })
+                .withBody(data)
                 .sent()
                 .then(response => {
-                    this.loading = false
                     if (response.status) {
                         this.data = response.data
                         this.pagination.total = response.total
                         this.pagination.pageSize = response.pageSize
                     }
+                    setTimeout(function () {
+                        vm.loading = false
+                    }, 200)
                 })
         },
         confirm(record) {

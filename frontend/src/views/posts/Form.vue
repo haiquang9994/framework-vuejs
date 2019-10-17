@@ -30,7 +30,6 @@
             </a-col>
             <a-col :lg="{ span: 18 }" class="ant-form-item-control">
                 <tiny-mce v-model="item.content"></tiny-mce>
-                <!-- <vue-mce></vue-mce> -->
             </a-col>
         </a-row>
         <a-row class="ant-form-item">
@@ -90,7 +89,7 @@ export default {
             item: {
                 title: '',
                 summary: '',
-                content: ``,
+                content: `<p>Quang</p>`,
                 published_at: {
                     date: moment('2019-10-15 12:30:00', 'YYYY-MM-DD HH:mm:ss'),
                     time: moment('2019-10-15 12:30:00', 'YYYY-MM-DD HH:mm:ss')

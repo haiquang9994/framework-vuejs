@@ -51,3 +51,12 @@ span.small-space {
     min-height: 1px;
     padding: 0 3px;
 }
+
+.ant-table-thead th[key=action] {
+    width: 200px;
+    text-align: center;
+}
+
+.table-record-actions {
+    text-align: center;
+}

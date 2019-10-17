@@ -10,12 +10,16 @@ export default {
         }
     },
     props: ['value'],
-    mounted() {
-        this.initMce()
-    },
     activated() {
         this.$refs.editor.style = ''
         this.initMce()
+    },
+    watch: {
+        value(value) {
+            if (value !== tinyMCE.get(this.id).getContent()) {
+                tinyMCE.get(this.id).setContent(value)
+            }
+        }
     },
     methods: {
         makeid(length) {
@@ -74,3 +78,9 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+textarea {
+    display: none;
+}
+</style>

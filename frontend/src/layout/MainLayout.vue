@@ -4,7 +4,7 @@
         <a-layout>
             <global-header :sidebarOptions="sidebarOptions" />
             <a-layout-content :style="{ margin: '15px' }">
-                <ul class="route-tabs" v-show="$store.state.layout.tabs.length > 1">
+                <ul class="route-tabs">
                     <li
                         class="route-tab route-tab-enable"
                         v-for="(tab, i) in $store.state.layout.tabs"

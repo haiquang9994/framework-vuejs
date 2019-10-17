@@ -17,16 +17,35 @@ abstract class ApiController extends Controller
 
     protected function ___get()
     {
+        $id = $this->request->attributes->get('id');
+        if ($id === null) {
+            $result = $this->getService()->getRecords($this->request);
+            if ($result->status) {
+                return [
+                    'status' => true,
+                    'total' => $result->total,
+                    'pageSize' => $result->pageSize,
+                    'data' => $result->data,
+                ];
+            }
+        } else {
+            $result = $this->getService()->getRecord($this->request);
+            if ($result->status) {
+                return [
+                    'status' => true,
+                    'data' => $result->data,
+                ];
+            }
+        }
         return [
-            'status' => true,
-            'id' => 1,
+            'status' => false,
         ];
     }
 
     protected function ___post()
     {
         $data = $this->getJsonData();
-        $result = $this->getService()->insert($data);
+        $result = $this->getService()->insertRecord($data);
         if ($result->status) {
             return [
                 'status' => true,
@@ -40,17 +59,30 @@ abstract class ApiController extends Controller
 
     protected function ___put()
     {
+        $data = $this->getJsonData();
+        $result = $this->getService()->updateRecord($this->request, $data);
+        if ($result->status) {
+            return [
+                'status' => true,
+                'id' => $result->model->id,
+            ];
+        }
         return [
-            'status' => true,
-            'id' => 1,
+            'status' => false,
         ];
     }
 
     protected function ___delete()
     {
+        $result = $this->getService()->deleteRecord($this->request);
+        if ($result->status) {
+            return [
+                'status' => true,
+                'id' => $result->model->id,
+            ];
+        }
         return [
-            'status' => true,
-            'id' => 1,
+            'status' => false,
         ];
     }
 }

@@ -9,7 +9,7 @@
                         class="route-tab route-tab-enable"
                         v-for="(tab, i) in $store.state.layout.tabs"
                         :key="i"
-                        :class="{active: tab.name === $store.state.layout.active_tab}"
+                        :class="{active: tab.fullPath === $store.state.layout.active_tab}"
                         @click="click_tab($event, tab)"
                         @click.middle="close_tab(tab)"
                     >
@@ -24,7 +24,7 @@
                     </li>
                 </ul>
                 <div :style="{ padding: '18px', background: '#fff', minHeight: '360px' }">
-                    <keep-alive :include="includeViews">
+                    <keep-alive>
                         <router-view :key="$route.fullPath"></router-view>
                     </keep-alive>
                     <slot />
@@ -54,37 +54,25 @@ export default {
             loadding: false,
             Vue: Vue,
             menu: null,
-            includeViews: [
-                'ListPost', 'NewPost', 'Dashboard', 'Profile', 'Setting',
-            ]
         }
     },
     methods: {
         click_tab(e, tab) {
-            if (e.target.classList.contains('route-tab-enable') && this.$route.name !== tab.name) {
-                this.$router.push(tab.path)
+            if (e.target.classList.contains('route-tab-enable') && this.$route.fullPath !== tab.fullPath) {
+                this.$router.push(tab.fullPath)
             }
         },
-        clean_component(tab) {
-            let i = this.includeViews.indexOf(tab.component)
-            this.includeViews.splice(i, 1)
-        },
-        roll_component(tab) {
-            this.$nextTick(function () {
-                this.includeViews.push(tab.component)
-            })
-        },
         do_close_tab(tab) {
-            let i = this.$store.state.layout.tabs.indexOf(this.$store.state.layout.tabs.find(t => t.name === tab.name))
+            let i = this.$store.state.layout.tabs.indexOf(this.$store.state.layout.tabs.find(t => t.fullPath === tab.fullPath))
             this.$store.state.layout.tabs.splice(i, 1)
-            let close_i = this.$store.state.layout.tab_history.indexOf(tab.name)
+            let close_i = this.$store.state.layout.tab_history.indexOf(tab.fullPath)
             this.$store.state.layout.tab_history.splice(close_i, 1)
             let active = this.$store.state.layout.active_tab
-            if (active === tab.name) {
-                let last_tab_name = this.$store.state.layout.tab_history[this.$store.state.layout.tab_history.length - 1]
-                let last_tab = this.$store.state.layout.tabs.find(t => t.name === last_tab_name)
+            if (active === tab.fullPath) {
+                let last_tab_full_path = this.$store.state.layout.tab_history[this.$store.state.layout.tab_history.length - 1]
+                let last_tab = this.$store.state.layout.tabs.find(t => t.fullPath === last_tab_full_path)
                 if (last_tab) {
-                    this.$router.replace(last_tab.path)
+                    this.$router.replace(last_tab.fullPath)
                 }
             }
         },
@@ -92,9 +80,7 @@ export default {
             if (tab.name === 'dashboard') {
                 return
             }
-            this.clean_component(tab)
             this.do_close_tab(tab)
-            this.roll_component(tab)
         }
     }
 }

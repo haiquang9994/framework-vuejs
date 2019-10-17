@@ -9,6 +9,9 @@ import helpers from './libraries/helpers'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import appendQuery from 'append-query'
+import trim from 'trim-character'
+import VueMce from 'vue-mce'
 
 import 'ant-design-vue/dist/antd.css'
 
@@ -21,20 +24,36 @@ Vue.use(Antd)
 Vue.use(responsive)
 Vue.use(http)
 Vue.use(helpers)
+Vue.use(VueMce)
 
 Vue.component('fai', FontAwesomeIcon)
 
+const refs = {}
+
+router.beforeEach((to, from, next) => {
+    if (to.path === '/') {
+        next()
+        return
+    }
+    for (let k in to.query) {
+        if (k.match(/^rf\d{5}$/) !== null) {
+            next()
+            return
+        }
+    }
+    let url = appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5))
+    next(trim(url, '='))
+})
+
 router.afterEach(current => {
-    console.log(current.fullPath)
-    let use_layout = store.state.layout.use_layout = current.meta.use_layout || false
     if (current.meta.active) {
         store.state.activeMenu.pop()
         store.state.activeMenu.push(current.meta.active)
     }
+    let use_layout = store.state.layout.use_layout = current.meta.use_layout || false
     if (use_layout) {
         let check = store.state.layout.tabs.filter(tab => {
             return tab.fullPath === current.fullPath
-            // return tab.name === current.name
         }).length
         if (check === 0) {
             store.state.layout.tabs.push({
@@ -42,15 +61,14 @@ router.afterEach(current => {
                 name: current.name,
                 path: current.path,
                 label: current.meta.label,
-                component: current.meta.name,
             })
         }
-        let i = store.state.layout.tab_history.indexOf(current.name)
+        let i = store.state.layout.tab_history.indexOf(current.fullPath)
         if (i > -1) {
             store.state.layout.tab_history.splice(i, 1)
         }
-        store.state.layout.tab_history.push(current.name)
-        store.state.layout.active_tab = current.name
+        store.state.layout.tab_history.push(current.fullPath)
+        store.state.layout.active_tab = current.fullPath
     }
 })
 

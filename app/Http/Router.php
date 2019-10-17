@@ -27,7 +27,7 @@ class Router extends RouteLoader
             $group->delete('/logout', $this->to('Admin\Auth', 'logout'), 'api_admin_logout');
 
             $group->map('GET|POST', '/post', $this->to('Admin\Post', 'index'), 'api_admin_post');
-            $group->map('PUT|DELETE', '/post/{id}', $this->to('Admin\Post', 'index'), 'api_admin_post_');
+            $group->map('GET|PUT|DELETE', '/post/{id}', $this->to('Admin\Post', 'index'), 'api_admin_post_');
         }, [
             '_before' => [
                 ApiAdminMiddleware::class,

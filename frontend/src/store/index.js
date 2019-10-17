@@ -13,10 +13,11 @@ export default new Vuex.Store({
         layout: {
             use_layout: false,
             tabs: [
-                { name: 'dashboard', label: 'Dashboard', path: '/', component: 'Dashboard' }
+                { name: 'dashboard', label: 'Dashboard', path: '/', fullPath: '/', component: 'Dashboard' }
             ],
-            tab_history: ['dashboard']
+            tab_history: ['/']
         },
+        tmp: {},
         activeMenu: [],
         __finder_dir: '.',
     },

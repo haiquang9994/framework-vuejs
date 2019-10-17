@@ -24,7 +24,8 @@
         "edsdk/flmngr-server-php": "^1.0",
         "barryvdh/elfinder-flysystem-driver": "^0.2.1",
         "studio-42/elfinder": "^2.1",
-        "evenement/evenement": "^3.0"
+        "evenement/evenement": "^3.0",
+        "illuminate/pagination": "v5.8"
     },
     "autoload": {
         "psr-4": {

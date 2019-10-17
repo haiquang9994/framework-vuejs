@@ -7,13 +7,13 @@ import isGuest from './middleware/isGuest'
 Vue.use(Router)
 
 const routes = {
-    '/': ['Dashboard', 'dashboard', { active: 'dashboard', use_layout: true, label: 'Dashboard', name: 'Dashboard' }, [isLoggedIn]],
+    '/': ['Dashboard', 'dashboard', { active: 'dashboard', use_layout: true, label: 'Dashboard' }, [isLoggedIn]],
     '/login': ['Login', 'login', { use_layout: false }, [isGuest]],
-    '/setting': ['Setting', 'setting', { active: 'setting', use_layout: true, label: 'Setting', name: 'Setting' }, [isLoggedIn]],
-    '/posts': ['posts/List', 'post_list', { active: 'post', use_layout: true, label: 'Posts', name: 'ListPost' }, [isLoggedIn]],
-    '/posts/new': ['posts/New', 'post_new', { active: 'post', use_layout: true, label: 'New Post', name: 'NewPost' }, [isLoggedIn]],
-    '/posts/:id': ['posts/Update', 'post_update', { active: 'post', use_layout: true, label: 'Update Post', name: 'UpdatePost' }, [isLoggedIn]],
-    '/profile': ['Profile', 'profile', { active: 'profile', use_layout: true, label: 'Profile', name: 'Profile' }, [isLoggedIn]],
+    '/setting': ['Setting', 'setting', { active: 'setting', use_layout: true, label: 'Setting' }, [isLoggedIn]],
+    '/posts': ['posts/List', 'post_list', { active: 'post', use_layout: true, label: 'Posts' }, [isLoggedIn]],
+    '/posts/new': ['posts/Form', 'post_new', { active: 'post', use_layout: true, label: 'New Post' }, [isLoggedIn]],
+    '/posts/:id': ['posts/Form', 'post_update', { active: 'post', use_layout: true, label: 'Update Post' }, [isLoggedIn]],
+    '/profile': ['Profile', 'profile', { active: 'profile', use_layout: true, label: 'Profile' }, [isLoggedIn]],
     '/finder/popup': ['finder/Popup.vue', 'finder_popup', {}, [isLoggedIn]],
 }
 

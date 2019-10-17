@@ -16,12 +16,25 @@ abstract class BaseService
     protected $container;
     protected $db;
     protected $model;
+    protected $model_object;
 
     public function __construct(ContainerInterface $container, Manager $db)
     {
         $this->container = $container;
         $this->db = $db;
         $this->boot();
+        if (class_exists($this->model)) {
+            $model_name = $this->model;
+            $this->model_object = new $model_name;
+        }
+    }
+
+    public function getKeyName():? string
+    {
+        if ($this->model_object instanceof Model) {
+            return $this->model_object->getKeyName();
+        }
+        return null;
     }
 
     public function __call($method, $params)

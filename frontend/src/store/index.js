@@ -7,6 +7,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         __: false,
+        file_manager: {
+            show: false,
+            target: null
+        },
         user_data: {},
         me_loaded: false,
         token: null,
@@ -19,7 +23,6 @@ export default new Vuex.Store({
         },
         tmp: {},
         activeMenu: [],
-        __finder_dir: '.',
     },
     getters: {
     },
@@ -34,6 +37,6 @@ export default new Vuex.Store({
     plugins: [createPersistedState({
         storage: window.localStorage,
         key: '__fw__',
-        paths: ['__', 'token', '__finder_dir']
+        paths: ['__', 'token', 'layout']
     })]
 })

@@ -7,7 +7,7 @@ class Post extends Base
     protected $table = 'posts';
 
     protected $fillable = [
-        'title', 'summary', 'content', 'published_at', 'active', 'featured',
+        'title', 'summary', 'content', 'published_at', 'active', 'featured', 'image',
     ];
 
     protected $casts = [

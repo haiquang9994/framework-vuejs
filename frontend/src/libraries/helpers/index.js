@@ -39,6 +39,33 @@ export default {
         Vue.prototype.$go = function (path) {
             this.$router.push(path)
         }
+        Vue.prototype.$log = function (data) {
+            console.log(data)
+        }
+        Vue.prototype.$validate = function (content, value) {
+            if (content.handle(value)) {
+                content.status = ''
+                content.help = ''
+            } else {
+                content.status = 'error'
+                content.help = content.message
+            }
+        }
+        Vue.prototype.$validate_all = function (validator, data) {
+            let status = true
+            for (let key in validator) {
+                let content = validator[key]
+                if (content.handle(data[content.key] || data[key])) {
+                    content.status = ''
+                    content.help = ''
+                } else {
+                    status = false
+                    content.status = 'error'
+                    content.help = content.message
+                }
+            }
+            return status
+        }
         Vue.prototype.$replaceActiveTab = function (path, find_old_tab) {
             this.$store.state.layout.tab_history.pop()
             this.$store.state.layout.tabs.pop()
@@ -71,6 +98,13 @@ export default {
                     this.$store.commit('save')
                 }
             }
+        }
+        Vue.prototype.$filemanagerOpen = function (target) {
+            this.$store.state.file_manager.target = target
+            this.$store.state.file_manager.show = true
+        }
+        Vue.prototype.$filemanagerClose = function () {
+            this.$store.state.file_manager.show = false
         }
     }
 }

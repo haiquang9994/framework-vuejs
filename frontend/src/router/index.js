@@ -9,7 +9,7 @@ Vue.use(Router)
 const routes = {
     '/': ['Dashboard', 'dashboard', { active: 'dashboard', use_layout: true, label: 'Dashboard' }, [isLoggedIn]],
     '/login': ['Login', 'login', { use_layout: false }, [isGuest]],
-    '/setting': ['Setting', 'setting', { active: 'setting', use_layout: true, label: 'Setting' }, [isLoggedIn]],
+    '/settings': ['Settings', 'settings', { active: 'settings', use_layout: true, label: 'Settings' }, [isLoggedIn]],
     '/posts': ['posts/List', 'post_list', { active: 'post', use_layout: true, label: 'Posts' }, [isLoggedIn]],
     '/posts/new': ['posts/Form', 'post_new', { active: 'post', use_layout: true, label: 'New Post' }, [isLoggedIn]],
     '/posts/:id': ['posts/Form', 'post_update', { active: 'post', use_layout: true, label: 'Update Post' }, [isLoggedIn]],

@@ -11,7 +11,10 @@ import { fas, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import appendQuery from 'append-query'
 import trim from 'trim-character'
-import VueMce from 'vue-mce'
+import PageTitle from './components/PageTitle'
+import TinyMce from '@/components/TinyMce'
+import FileManager from './components/FileManager'
+import Vodal from 'vodal'
 
 import 'ant-design-vue/dist/antd.css'
 
@@ -24,25 +27,37 @@ Vue.use(Antd)
 Vue.use(responsive)
 Vue.use(http)
 Vue.use(helpers)
-Vue.use(VueMce)
 
 Vue.component('fai', FontAwesomeIcon)
+Vue.component('page-title', PageTitle)
+Vue.component('tiny-mce', TinyMce)
+Vue.component(Vodal.name, Vodal)
+Vue.component('file-manager', FileManager)
 
 const unique_list = [
-    'dashboard', 'post_list', 'setting', 'post_update'
+    'profile', 'settings', 'post_list', 'post_update'
+]
+
+const not_rf_list = [
+    'dashboard', 'login',
 ]
 
 router.beforeEach((to, from, next) => {
-    if (unique_list.indexOf(to.name) > -1) {
+    if (not_rf_list.indexOf(to.name) > -1) {
         return next()
     }
     for (let k in to.query) {
         if (k.match(/^rf\d{5}$/) !== null) {
-            next()
-            return
+            return next()
         }
     }
-    router.push(trim(appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5)), '='))
+    if (unique_list.indexOf(to.name) > -1) {
+        let path = store.state.layout.tab_history.find(t => t.startsWith(to.path + '?'))
+        if (path) {
+            return router.push(path)
+        }
+    }
+    return router.push(trim(appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5)), '='))
     // next(trim(appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5)), '='))
 })
 
@@ -70,6 +85,7 @@ router.afterEach(current => {
         }
         store.state.layout.tab_history.push(current.fullPath)
         store.state.layout.active_tab = current.fullPath
+        store.commit('save')
     }
 })
 

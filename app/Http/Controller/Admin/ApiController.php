@@ -23,8 +23,7 @@ abstract class ApiController extends Controller
             if ($result->status) {
                 return [
                     'status' => true,
-                    'total' => $result->total,
-                    'pageSize' => $result->pageSize,
+                    'pagination' => $result->pagination,
                     'data' => $result->data,
                 ];
             }

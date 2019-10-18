@@ -12,9 +12,9 @@ export default [
         link: '/posts',
     },
     {
-        key: 'setting',
+        key: 'settings',
         icon: { key: 'setting' },
-        text: 'Setting',
-        link: '/setting',
+        text: 'Settings',
+        link: '/settings',
     },
 ]

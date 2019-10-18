@@ -22,12 +22,17 @@ class Router extends RouteLoader
         $routing->post('/api/admin/login', $this->to('Admin\Auth', 'login'), 'api_admin_login');
         $routing->group('/api/admin', function ($group) {
             $group->map('POST|GET', '/finder/connector', $this->to('Admin\Finder', 'connector'), 'finder_connector');
+            $group->map('POST', '/finder/upload', $this->to('Admin\Finder', 'upload'), 'finder_upload');
+
             $group->get('/me', $this->to('Admin\Dashboard', 'me'), 'api_admin_me');
             $group->put('/me', $this->to('Admin\Dashboard', 'putMe'), 'api_admin_put_me');
             $group->delete('/logout', $this->to('Admin\Auth', 'logout'), 'api_admin_logout');
 
             $group->map('GET|POST', '/post', $this->to('Admin\Post', 'index'), 'api_admin_post');
             $group->map('GET|PUT|DELETE', '/post/{id}', $this->to('Admin\Post', 'index'), 'api_admin_post_');
+
+            $group->map('GET', '/settings', $this->to('Admin\Setting', 'index'), 'api_admin_setting');
+            $group->map('PUT', '/settings', $this->to('Admin\Setting', 'save'), 'api_admin_setting_');
         }, [
             '_before' => [
                 ApiAdminMiddleware::class,

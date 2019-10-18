@@ -5,13 +5,7 @@
 </template>
 
 <script>
-import PageTitle from "@/components/PageTitle"
-
 export default {
-    name: 'Dashboard',
-    components: {
-        PageTitle
-    },
     data() {
         return {
         }

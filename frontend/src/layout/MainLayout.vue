@@ -81,6 +81,7 @@ export default {
                 return
             }
             this.do_close_tab(tab)
+            this.$store.commit('save')
         }
     }
 }

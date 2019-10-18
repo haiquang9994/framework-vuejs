@@ -1045,7 +1045,7 @@
   display: none !important;
 }
 .ui-widget-header .elfinder-path {
-  max-width: 300px;
+  max-width: 500px;
 }
 .ui-widget-header .elfinder-stat-selected {
   height: 29px;

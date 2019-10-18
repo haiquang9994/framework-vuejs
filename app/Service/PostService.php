@@ -19,6 +19,8 @@ class PostService extends ApiService
             'published_at' => $this->formatIsoDatetime($record, 'published_at'),
             'active' => $record->active,
             'featured' => $record->featured,
+            'image' => $record->image,
+            'thumb' => $record->image,
             'created_at' => $this->formatIsoDatetime($record, 'created_at'),
             'updated_at' => $this->formatIsoDatetime($record, 'updated_at'),
         ];

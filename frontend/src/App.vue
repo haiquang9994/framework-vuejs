@@ -3,6 +3,7 @@
         <main-layout v-if="$store.state.layout.use_layout"></main-layout>
         <router-view v-else></router-view>
         <loading id="loader-wrapper" :active.sync="loaderVisible" loader="dots"></loading>
+        <file-manager/>
     </section>
 </template>
 <script>
@@ -17,7 +18,7 @@ export default {
     data() {
         return {
             loaderVisible: true,
-            use_layout: null
+            use_layout: null,
         }
     },
     mounted() {
@@ -51,4 +52,6 @@ export default {
 
 <style lang="scss">
 @import "./scss/app.scss";
+@import "./scss/common.scss";
+@import "./scss/zoom.scss";
 </style>

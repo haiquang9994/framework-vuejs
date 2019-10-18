@@ -38,7 +38,7 @@ export default {
             })
         },
         initMce() {
-            let vm = this, token = vm.$store.state.token, id = vm.id
+            let vm = this, id = vm.id//, token = vm.$store.state.token
             this.removeOldMce()
             this.$nextTick(function () {
                 tinyMCE.init({
@@ -51,17 +51,11 @@ export default {
                     statusbar: false,
                     content_css: process.env.VUE_APP_WEB_URL + 'assets/content.css',
                     file_browser_callback(field_name, url, type, win) {
-                        tinyMCE.activeEditor.windowManager.open({
-                            file: process.env.VUE_APP_WEB_URL + 'elfinder/index.html?_token=' + token,
-                            title: 'File Manager',
-                            width: window.innerWidth - 200,
-                            height: window.innerHeight - 200,
-                        }, {
-                            input: field_name,
-                            setUrl(url) {
-                                document.getElementById(field_name).value = url
-                            }
-                        })
+                        window.tinymce_file_browser_callback_set_url = url => {
+                            document.getElementById(field_name).value = url
+                            vm.$filemanagerClose()
+                        }
+                        vm.$filemanagerOpen('getfile_tinymce')
                         return false
                     },
                     init_instance_callback(editor) {
@@ -71,6 +65,12 @@ export default {
                         })
                         editor.on('NodeChange', (e) => {
                             vm.$emit('input', editor.getContent())
+                        })
+                        editor.on('focus', function (e) {
+                            vm.$emit('focus')
+                        })
+                        editor.on('blur', function (e) {
+                            vm.$emit('blur')
                         })
                     }
                 })

@@ -44,6 +44,7 @@ class DashboardController extends Controller
                     'fullname' => $admin->fullname,
                     'roles' => $admin->roles,
                 ],
+                'message' => 'Cập nhật thành công!',
             ]);
         }
         return $this->json([

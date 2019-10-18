@@ -7,61 +7,12 @@ use DateTime;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class ApiService extends BaseService
 {
-    public function insertRecord(array $data): Result
-    {
-        return $this->execInTransaction(function () use ($data) {
-            $model = $this->createNew($data);
-            $this->emit('creating', [$model]);
-            $this->emit('saving', [$model]);
-            $model->save();
-            $this->emit('saved', [$model]);
-            $this->emit('created', [$model]);
-            return new Result([
-                'status' => true,
-                'model' => $model,
-            ]);
-        });
-    }
-
-    public function updateRecord(Request $request, array $data): Result
-    {
-        return $this->execInTransaction(function () use ($request, $data) {
-            $query = $this->updateQuery();
-            $model = $query->find($request->attributes->get($this->getKeyName()));
-            $model->fill($data);
-            $this->emit('updating', [$model]);
-            $this->emit('saving', [$model]);
-            $model->save();
-            $this->emit('saved', [$model]);
-            $this->emit('updated', [$model]);
-            return new Result([
-                'status' => true,
-                'model' => $model,
-            ]);
-        });
-    }
-
-    public function deleteRecord(Request $request)
-    {
-        return $this->execInTransaction(function () use ($request) {
-            $query = $this->deleteQuery();
-            $model = $query->find($request->attributes->get($this->getKeyName()));
-            $this->emit('deleting', [$model]);
-            $model->delete();
-            $this->emit('deleted', [$model]);
-            return new Result([
-                'status' => true,
-                'model' => $model,
-            ]);
-        });
-    }
-
     protected function newQuery(): Builder
     {
         return $this->query();
@@ -111,6 +62,13 @@ abstract class ApiService extends BaseService
         })->all();
     }
 
+    public function renderItemsFromCollection(Collection $records): array
+    {
+        return $records->map(function ($record) {
+            return $this->item($record);
+        })->all();
+    }
+
     public function renderItem(Model $record)
     {
         return $this->item($record);
@@ -128,11 +86,19 @@ abstract class ApiService extends BaseService
                 $orders = explode('.', $orderBy);
                 $query->orderBy($orders[0], $orders[1] ?? 'asc');
             }
+            $paging = $request->query->get('_paging', '1');
             $query->orderBy('id', 'desc');
-            $records = $query->paginate(15, ['*'], '_page', $page);
-            $result->data = $this->renderItems($records);
-            $result->total = $records->total();
-            $result->pageSize = 15;
+            if ($paging) {
+                $records = $query->paginate(10, ['*'], '_page', $page);
+                $result->data = $this->renderItems($records);
+                $result->pagination = [
+                    'total' => $records->total(),
+                    'pageSize' => 10,
+                ];
+            } else {
+                $records = $query->get();
+                $result->data = $this->renderItemsFromCollection($records);
+            }
         } catch (Exception $e) {
             $result->status = false;
             $result->message = $e->getMessage();
@@ -158,6 +124,55 @@ abstract class ApiService extends BaseService
         }
 
         return $result;
+    }
+
+    public function insertRecord(array $data): Result
+    {
+        return $this->execInTransaction(function () use ($data) {
+            $model = $this->createNew($data);
+            $this->emit('creating', [$model]);
+            $this->emit('saving', [$model]);
+            $model->save();
+            $this->emit('saved', [$model]);
+            $this->emit('created', [$model]);
+            return new Result([
+                'status' => true,
+                'model' => $model,
+            ]);
+        });
+    }
+
+    public function updateRecord(Request $request, array $data): Result
+    {
+        return $this->execInTransaction(function () use ($request, $data) {
+            $query = $this->updateQuery();
+            $model = $query->find($request->attributes->get($this->getKeyName()));
+            $model->fill($data);
+            $this->emit('updating', [$model]);
+            $this->emit('saving', [$model]);
+            $model->save();
+            $this->emit('saved', [$model]);
+            $this->emit('updated', [$model]);
+            return new Result([
+                'status' => true,
+                'model' => $model,
+            ]);
+        });
+    }
+
+    public function deleteRecord(Request $request)
+    {
+        return $this->execInTransaction(function () use ($request) {
+            $query = $this->deleteQuery();
+            $model = $query->find($request->attributes->get($this->getKeyName()));
+            $this->emit('deleting', [$model]);
+            $model->delete();
+            $this->emit('deleted', [$model]);
+            return new Result([
+                'status' => true,
+                'model' => $model,
+            ]);
+        });
     }
 
     public function execInTransaction(callable $callback): Result

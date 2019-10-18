@@ -11,6 +11,7 @@ class Posts extends AbstractMigration
             ->addColumn('slug', 'string', ['null' => true, 'default' => null, 'limit' => 255])
             ->addColumn('summary', 'text', ['null' => true, 'default' => null])
             ->addColumn('content', 'text', ['null' => true, 'default' => null])
+            ->addColumn('image', 'string', ['null' => true, 'default' => null])
             ->addColumn('published_at', 'timestamp', ['null' => true, 'default' => null])
             ->addColumn('active', 'boolean', ['null' => true, 'default' => null])
             ->addColumn('featured', 'boolean', ['null' => true, 'default' => null])

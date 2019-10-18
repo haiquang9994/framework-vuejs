@@ -12,16 +12,33 @@
 	<link rel="stylesheet" type="text/css" href="css/theme.css">
 	<link rel="stylesheet" href="theme/moono/theme.css">
 
+	<style>
+		html, body {
+			overflow: hidden;
+			margin: 0;
+		}
+		.ui-icon-gripsmall-diagonal-se {
+			display: none !important;
+		}
+	</style>
+
 	<script src="jquery/jquery.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="js/elfinder.min.js"></script>
 	<script src="js/extras/editors.default.min.js"></script>
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function () {
+			var list = {}
+			location.search.substr(1).split('&').forEach(function (item) {
+				var _ = item.split('=')
+				if (_.length === 2) {
+					list[_[0]] = _[1]
+				}
+			})
 			$('#elfinder').elfinder({
 				cssAutoLoad: false,
 				baseUrl: './',
-				url: '/api/admin/finder/connector' + location.search,
+				url: '/api/admin/finder/connector?_token=' + list._token,
 				commands: [
 					'open', 'reload', 'up', 'back', 'forward', 'getfile', 'quicklook',
 					'download', 'rm', 'duplicate', 'rename', 'mkdir', 'upload', 'copy',
@@ -30,10 +47,10 @@
 				],
 				requestType: 'get',
 				getFileCallback: function (file, el) {
-					if (parent.tinyMCE) {
-						parent.tinyMCE.activeEditor.windowManager.getParams().setUrl(file.url)
-						parent.tinyMCE.activeEditor.windowManager.close()
-					}
+					parent.postMessage({
+						command: list.target || 'getfile_tinymce',
+						url: file.url,
+					}, "*")
 				},
 				commandsOptions: {
 					getfile: {
@@ -77,8 +94,8 @@
 					]
 				},
 				height: '100%',
-			});
-		});
+			})
+		})
 	</script>
 </head>
 

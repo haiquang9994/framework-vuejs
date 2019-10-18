@@ -30,13 +30,7 @@
 </template>
 
 <script>
-import PageTitle from "@/components/PageTitle"
-
 export default {
-    name: 'ListPost',
-    components: {
-        PageTitle
-    },
     data() {
         return {
             loading: true,
@@ -45,6 +39,7 @@ export default {
                     title: 'Title',
                     dataIndex: 'title',
                     sorter: true,
+                    width: '30%'
                 },
                 {
                     title: 'Summary',
@@ -91,8 +86,8 @@ export default {
                 .then(response => {
                     if (response.status) {
                         this.data = response.data
-                        this.pagination.total = response.total
-                        this.pagination.pageSize = response.pageSize
+                        this.pagination.total = response.pagination.total
+                        this.pagination.pageSize = response.pagination.pageSize
                     }
                     setTimeout(function () {
                         vm.loading = false

@@ -28,12 +28,13 @@ Vue.use(VueMce)
 
 Vue.component('fai', FontAwesomeIcon)
 
-const refs = {}
+const unique_list = [
+    'dashboard', 'post_list', 'setting', 'post_update'
+]
 
 router.beforeEach((to, from, next) => {
-    if (to.path === '/') {
-        next()
-        return
+    if (unique_list.indexOf(to.name) > -1) {
+        return next()
     }
     for (let k in to.query) {
         if (k.match(/^rf\d{5}$/) !== null) {
@@ -41,8 +42,8 @@ router.beforeEach((to, from, next) => {
             return
         }
     }
-    let url = appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5))
-    next(trim(url, '='))
+    router.push(trim(appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5)), '='))
+    // next(trim(appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5)), '='))
 })
 
 router.afterEach(current => {

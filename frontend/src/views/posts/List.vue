@@ -1,7 +1,7 @@
 <template>
     <div>
         <page-title title="Posts">
-            <router-link class="ant-btn ant-btn-primary" to="/posts/new">New</router-link>
+            <a-button @click="$go('/posts/new')" type="primary">New</a-button>
         </page-title>
         <a-table
             :columns="columns"

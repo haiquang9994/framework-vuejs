@@ -43,6 +43,7 @@ export default {
             this.$nextTick(function () {
                 tinyMCE.init({
                     selector: '#' + id,
+                    entity_encoding: 'raw',
                     height: '600px',
                     plugins: 'code lists image media link table hr charmap directionality fullscreen',
                     toolbar: 'undo redo | bold italic underline strikethrough superscript subscript | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | image media link table hr charmap | ltr rtl | fullscreen | code',
@@ -66,7 +67,7 @@ export default {
                     init_instance_callback(editor) {
                         tinyMCE.get(id).setContent(vm.value)
                         editor.on('input', (e) => {
-                            vm.$emit('input', e.target.innerHTML)
+                            vm.$emit('input', editor.getContent())
                         })
                         editor.on('NodeChange', (e) => {
                             vm.$emit('input', editor.getContent())

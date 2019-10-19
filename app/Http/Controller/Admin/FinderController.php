@@ -41,13 +41,16 @@ class FinderController extends Controller
     {
         $file = $this->request->files->get('file');
         $filename = $this->container->get(Slugify::class)->slugify(substr($file->getClientOriginalName(), 0, strrpos($file->getClientOriginalName(), '.'))) . '-' . time() . '.' . $file->getClientOriginalExtension();
-        $file->move(ROOT_PATH . '/public/photos/upload', $filename);
+        $year = date('Y');
+        $month = date('m');
+        $day = date('d');
+        $file->move(ROOT_PATH . "/public/photos/upload/$year/$month/$day", $filename);
 
         return $this->json([
             'name' => $filename,
             'status' => 'done',
-            'thumbUrl' => 'photos/upload/' . $filename,
-            'url' => 'photos/upload/' . $filename,
+            'thumbUrl' => "photos/upload/$year/$month/$day/" . $filename,
+            'url' => "photos/upload/$year/$month/$day/" . $filename,
         ]);
     }
 }

@@ -1,19 +1,21 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
+import router from '@/router'
+import store from '@/store'
 import Antd from 'ant-design-vue'
 import responsive from 'vue-responsive'
-import http from './libraries/http'
-import helpers from './libraries/helpers'
+import http from '@/libraries/http'
+import helpers from '@/libraries/helpers'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import appendQuery from 'append-query'
 import trim from 'trim-character'
-import PageTitle from './components/PageTitle'
+import PageTitle from '@/components/PageTitle'
 import TinyMce from '@/components/TinyMce'
-import FileManager from './components/FileManager'
+import FileManager from '@/components/FileManager.vue'
+import SelectFile from '@/components/SelectFile'
+import UploadFile from '@/components/UploadFile.vue'
 import Vodal from 'vodal'
 
 import 'ant-design-vue/dist/antd.css'
@@ -33,6 +35,8 @@ Vue.component('page-title', PageTitle)
 Vue.component('tiny-mce', TinyMce)
 Vue.component(Vodal.name, Vodal)
 Vue.component('file-manager', FileManager)
+Vue.component('select-file', SelectFile)
+Vue.component('upload-file', UploadFile)
 
 const unique_list = [
     'profile', 'settings', 'post_list', 'post_update'
@@ -54,11 +58,10 @@ router.beforeEach((to, from, next) => {
     if (unique_list.indexOf(to.name) > -1) {
         let path = store.state.layout.tab_history.find(t => t.startsWith(to.path + '?'))
         if (path) {
-            return router.push(path)
+            return router.push(path).catch(() => {})
         }
     }
-    return router.push(trim(appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5)), '='))
-    // next(trim(appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5)), '='))
+    return router.push(trim(appendQuery(to.fullPath, 'rf' + Vue.prototype.$helpers.rNum(5)), '=')).catch(() => {})
 })
 
 router.afterEach(current => {
@@ -86,6 +89,7 @@ router.afterEach(current => {
         store.state.layout.tab_history.push(current.fullPath)
         store.state.layout.active_tab = current.fullPath
         store.commit('save')
+        document.title = current.meta.label
     }
 })
 

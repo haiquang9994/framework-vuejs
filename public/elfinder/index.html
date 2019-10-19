@@ -48,6 +48,7 @@
 				requestType: 'get',
 				getFileCallback: function (file, el) {
 					parent.postMessage({
+						message: 'file_manager',
 						command: list.target || 'getfile_tinymce',
 						url: file.url,
 					}, "*")

@@ -6,6 +6,7 @@
         :width="filemanager.width"
         :height="filemanager.height"
         :customStyles="{padding: '0'}"
+        :closeOnClickMask="false"
     >
         <h2>File Manager</h2>
         <iframe ref="iframe" frameborder="0"></iframe>
@@ -17,8 +18,8 @@ export default {
     data() {
         return {
             filemanager: {
-                width: window.innerWidth - 200,
-                height: window.innerHeight - 200,
+                width: Math.min(window.innerWidth - 200, 1320),
+                height: Math.min(window.innerHeight - 200, 800),
             },
             iframe: {
                 url: process.env.VUE_APP_WEB_URL + 'elfinder/index.html?_token=' + this.$store.state.token
@@ -26,10 +27,15 @@ export default {
         }
     },
     created() {
-        window.addEventListener('message', (e) => {
-            let url = process.env.VUE_APP_WEB_URL + e.data.url
-            if (e.data.command === 'getfile_tinymce') {
-                window.tinymce_file_browser_callback_set_url(url)
+        window.addEventListener('message', e => {
+            if (e.data && e.data.message === 'file_manager') {
+                let url = this.$mergeUrl(process.env.VUE_APP_WEB_URL, e.data.url)
+                if (e.data.command === 'getfile_tinymce') {
+                    window.tinymce_file_browser_callback_set_url(url)
+                } else if (e.data.command === 'button_select_file') {
+                    window.button_select_file_callback_set_url(url)
+                }
+                this.$filemanagerClose()
             }
         })
     },
@@ -37,8 +43,10 @@ export default {
         '$store.state.file_manager.show': function (show) {
             if (show) {
                 this.$refs.iframe.src = this.iframe.url + '&target=' + this.$store.state.file_manager.target
+                document.scrollingElement.classList.add('file-manager-opened')
             } else {
                 this.$refs.iframe.src = ''
+                document.scrollingElement.classList.remove('file-manager-opened')
             }
         }
     }

@@ -17,20 +17,16 @@
             />
         </a-form-item>
         <a-form-item label="Image" :label-col="{ lg: 3 }" :wrapper-col="{ lg: 18 }">
-            <a-upload
-                name='file'
-                class="avatar-uploader"
-                :showUploadList="false"
-                :action="uploader.uploadEndPoint"
-                :beforeUpload="beforeUpload"
-                @change="handleChange"
-            >
-                <a-button> <a-icon type="upload" /> Upload </a-button>
-            </a-upload>
+            <upload-file @change="changeImage" />
             <span class="small-space"></span>
-            <a-button @click="showFileManager"> <a-icon type="folder" /> File manager </a-button>
+            <select-file @change="changeImage" />
             <div>
-                <img v-if="item.image.thumbUrl" :src="item.image.thumbUrl" alt="avatar" style="max-width: 200px; max-height: 140px" />
+                <img
+                    class="form-thumbnail"
+                    v-if="item.image.thumbUrl"
+                    :src="item.image.thumbUrl"
+                    alt="avatar"
+                />
             </div>
         </a-form-item>
         <a-form-item label="Summary" :label-col="{ lg: 3 }" :wrapper-col="{ lg: 18 }">
@@ -71,12 +67,6 @@
 import moment from 'moment'
 import validator from 'validator'
 
-function getBase64(img, callback) {
-    const reader = new FileReader()
-    reader.addEventListener('load', () => callback(reader.result))
-    reader.readAsDataURL(img)
-  }
-
 export default {
     data() {
         return {
@@ -107,46 +97,11 @@ export default {
                     thumbUrl: '',
                 },
             },
-            uploader: {
-                loading: false,
-                uploadEndPoint: process.env.VUE_APP_API_ENDPOINT + 'finder/upload?_token=' + this.$store.state.token,
-            },
-            previewVisible: false,
-            previewImage: '',
         }
     },
     methods: {
-        showFileManager() {
-            this.$filemanagerOpen()
-            // this.$filemanager.show = true
-            // this.$store.state.show_file_manager = true
-            // console.log(this.$dialog)
-            // this.$dialog.open({
-            //     view: 'file-manager',
-            //     html: true,
-            //     animation: 'zoom',
-            //     backdropClose: true
-            // })
-        },
-        beforeUpload(file) {
-            const isLt2M = file.size / 1024 / 1024 < 2
-            if (!isLt2M) {
-                this.$message.error('Hình ảnh phải nhỏ hơn 2MB!')
-            }
-            return isLt2M
-        },
-        handleChange(info) {
-            if (info.file.status === 'uploading') {
-                this.loading = true
-                return
-            }
-            if (info.file.status === 'done') {
-                this.item.image.url = process.env.VUE_APP_WEB_URL + info.file.response.url
-                getBase64(info.file.originFileObj, imageUrl => {
-                    this.item.image.thumbUrl = imageUrl
-                    this.loading = false
-                })
-            }
+        changeImage(url) {
+            this.item.image.url = this.item.image.thumbUrl = url
         },
         save() {
             let data = {
@@ -180,6 +135,7 @@ export default {
                     })
                     .catch(e => {
                         this.processing = false
+                        this.$log(e)
                     })
             }
         },
@@ -199,6 +155,7 @@ export default {
                     })
                     .catch(e => {
                         this.processing = false
+                        this.$log(e)
                     })
             }
         }

@@ -1,4 +1,5 @@
 import store from '@/store'
+import trim from 'trim-character'
 
 const Helpers = {
     hasRole(role) {
@@ -37,7 +38,7 @@ export default {
     install: Vue => {
         Vue.prototype.$helpers = Helpers
         Vue.prototype.$go = function (path) {
-            this.$router.push(path)
+            this.$router.push(path).catch(() => {})
         }
         Vue.prototype.$log = function (data) {
             console.log(data)
@@ -105,6 +106,15 @@ export default {
         }
         Vue.prototype.$filemanagerClose = function () {
             this.$store.state.file_manager.show = false
+        }
+        Vue.prototype.$mergeUrl = function () {
+            let _ = []
+            for (let i = 0; i < arguments.length; i++) {
+                if (typeof arguments[i] === 'string') {
+                    _.push(trim(arguments[i], '/'))
+                }
+            }
+            return _.join('/')
         }
     }
 }

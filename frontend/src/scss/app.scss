@@ -38,6 +38,7 @@
         }
     }
 }
+
 .global-header-right {
     float: right;
 }
@@ -59,4 +60,16 @@ span.small-space {
 
 .table-record-actions {
     text-align: center;
+}
+
+.file-manager-opened {
+    overflow: hidden !important;
+}
+
+.form-thumbnail {
+    max-width: 200px;
+    max-height: 140px;
+    padding: 4px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
 }

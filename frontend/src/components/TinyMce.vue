@@ -16,8 +16,8 @@ export default {
     },
     watch: {
         value(value) {
-            if (value !== tinyMCE.get(this.id).getContent()) {
-                tinyMCE.get(this.id).setContent(value)
+            if (value !== window.tinyMCE.get(this.id).getContent()) {
+                window.tinyMCE.get(this.id).setContent(value)
             }
         }
     },
@@ -38,10 +38,10 @@ export default {
             })
         },
         initMce() {
-            let vm = this, id = vm.id//, token = vm.$store.state.token
+            let vm = this, id = vm.id
             this.removeOldMce()
             this.$nextTick(function () {
-                tinyMCE.init({
+                window.tinyMCE.init({
                     selector: '#' + id,
                     entity_encoding: 'raw',
                     height: '600px',
@@ -50,26 +50,25 @@ export default {
                     menubar: false,
                     statusbar: false,
                     content_css: process.env.VUE_APP_WEB_URL + 'assets/content.css',
-                    file_browser_callback(field_name, url, type, win) {
+                    file_browser_callback(field_name) {
                         window.tinymce_file_browser_callback_set_url = url => {
                             document.getElementById(field_name).value = url
-                            vm.$filemanagerClose()
                         }
                         vm.$filemanagerOpen('getfile_tinymce')
                         return false
                     },
                     init_instance_callback(editor) {
-                        tinyMCE.get(id).setContent(vm.value)
-                        editor.on('input', (e) => {
+                        window.tinyMCE.get(id).setContent(vm.value)
+                        editor.on('input', () => {
                             vm.$emit('input', editor.getContent())
                         })
-                        editor.on('NodeChange', (e) => {
+                        editor.on('NodeChange', () => {
                             vm.$emit('input', editor.getContent())
                         })
-                        editor.on('focus', function (e) {
+                        editor.on('focus', () => {
                             vm.$emit('focus')
                         })
-                        editor.on('blur', function (e) {
+                        editor.on('blur', () => {
                             vm.$emit('blur')
                         })
                     }

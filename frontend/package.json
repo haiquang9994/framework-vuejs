@@ -20,6 +20,7 @@
     "vodal": "^2.4.0",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.5",
+    "vue-cookies": "^1.5.13",
     "vue-loading-overlay": "^3.2.0",
     "vue-responsive": "^1.1.0",
     "vue-router": "^3.0.6",

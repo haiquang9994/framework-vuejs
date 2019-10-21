@@ -24,7 +24,7 @@
                             <a-icon slot="prefix" type="lock" />
                         </a-input>
                     </a-form-item>
-                    <a-checkbox class="user-select-none" v-model="rememberMe">Remember me</a-checkbox>
+                    <my-checkbox v-model="rememberMe">Remember me</my-checkbox>
                     <a-form-item>
                         <a-button
                             style="width: 100%;margin-top: 24px"
@@ -46,8 +46,6 @@ export default {
         return {
             logging: false,
             rememberMe: false,
-            checked: true,
-            disabled: false,
             email: "admin@gmail.com",
             password: "1234"
         }
@@ -69,15 +67,21 @@ export default {
                 .then(body => {
                     if (body.status && body.token) {
                         this.logging = false
+                        if (this.rememberMe) {
+                            this.$cookies.set('token', body.token, 60 * 60 * 24 * 30)
+                        } else {
+                            this.$cookies.set('token', body.token, 0)
+                        }
                         this.$c({ token: body.token, user_data: body.user_data, me_loaded: true }, true)
-                        this.$router.push('/')
+                        this.$go('/')
+                        411946754
                     }
                 })
                 .catch(() => {
                     this.logging = false
                 })
         }
-    }
+    },
 }
 </script>
 

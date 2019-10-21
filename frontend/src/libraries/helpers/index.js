@@ -1,5 +1,6 @@
 import store from '@/store'
 import trim from 'trim-character'
+import VueCookies from 'vue-cookies'
 
 const Helpers = {
     hasRole(role) {
@@ -32,6 +33,9 @@ const Helpers = {
         }
         return result
     },
+    getToken() {
+        return VueCookies.get('token')
+    }
 }
 
 export default {
@@ -99,6 +103,9 @@ export default {
                     this.$store.commit('save')
                 }
             }
+        }
+        Vue.prototype.$token = function () {
+            return this.$cookies.get('token')
         }
         Vue.prototype.$filemanagerOpen = function (target) {
             this.$store.state.file_manager.target = target

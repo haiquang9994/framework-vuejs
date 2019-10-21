@@ -1,15 +1,17 @@
 import store from '@/store'
 import Http from '@/libraries/http/http'
+import VueCookies from 'vue-cookies'
 
 export default (to, from, next) => {
-    if (store.state.token === null || store.state.token === undefined) {
+    let token = VueCookies.get('token')
+    if (token === null || token === undefined) {
         next('/login')
     } else {
         if (store.state.me_loaded) {
             next()
         } else {
             Http.get(process.env.VUE_APP_API_ENDPOINT + 'me')
-                .authed(store.state.token)
+                .authed(token)
                 .sent()
                 .then(body => {
                     store.state.user_data = body.user_data
@@ -17,7 +19,7 @@ export default (to, from, next) => {
                     next()
                 })
                 .catch(() => {
-                    store.state.token = null
+                    // token = null
                     store.commit('save')
                     next('/login')
                 })

@@ -25,7 +25,7 @@ export default {
             this.processing = true
             this.$http.put(process.env.VUE_APP_API_ENDPOINT + 'settings')
                 .withBody(this.settings)
-                .authed(this.$store.state.token)
+                .authed(this.$token())
                 .sent()
                 .then(response => {
                     if (response.status) {
@@ -37,7 +37,7 @@ export default {
         pull() {
             this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'settings')
                 .withBody({ _paging: 0 })
-                .authed(this.$store.state.token)
+                .authed(this.$token())
                 .sent()
                 .then(response => {
                     if (response.status) {

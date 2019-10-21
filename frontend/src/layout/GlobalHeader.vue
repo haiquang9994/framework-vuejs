@@ -29,7 +29,7 @@
                     <span>{{ $store.state.user_data.fullname }}</span>
                 </span>
                 <a-menu slot="overlay">
-                    <a-menu-item @click="open('/profile')">
+                    <a-menu-item @click="$go('/profile')">
                         <a-icon type="user" />Profile
                     </a-menu-item>
                     <a-menu-item @click="logout">
@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import router from '../router'
-
 export default {
     name: 'GlobalHeader',
     props: ['sidebarOptions'],
@@ -58,23 +56,28 @@ export default {
                 this.loadding = false
             }, 2000)
         },
-        open(path) {
-            router.push(path).catch(() => { })
-        },
         logout() {
             this.$http.delete(process.env.VUE_APP_API_ENDPOINT + 'logout')
-                .authed(this.$store.state.token)
+                .authed(this.$token())
                 .sent()
                 .then(() => {
+                    this.$store.state.layout.active_tab = null
+                    this.$store.state.layout.tab_history = []
+                    this.$store.state.layout.tabs = []
+                    this.$cookies.remove('token', null)
                     this.$c('token', null, true)
-                    this.$router.replace('/login')
+                    this.$go('/login')
                 })
                 .catch(() => {
+                    this.$store.state.layout.active_tab = null
+                    this.$store.state.layout.tab_history = []
+                    this.$store.state.layout.tabs = []
+                    this.$cookies.remove('token', null)
                     this.$c('token', null, true)
-                    this.$router.replace('/login')
+                    this.$go('/login')
                 })
-        }
-    }
+        },
+    },
 }
 </script>
 

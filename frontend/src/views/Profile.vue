@@ -31,7 +31,7 @@ export default {
                 .withBody({
                     fullname: this.profile.fullname
                 })
-                .authed(this.$store.state.token)
+                .authed(this.$token())
                 .sent()
                 .then(body => {
                     if (body.status) {

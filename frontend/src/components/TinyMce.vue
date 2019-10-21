@@ -46,7 +46,8 @@ export default {
                     entity_encoding: 'raw',
                     height: '600px',
                     plugins: 'code lists image media link table hr charmap directionality fullscreen',
-                    toolbar: 'undo redo | bold italic underline strikethrough superscript subscript | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | image media link table hr charmap | ltr rtl | fullscreen | code',
+                    toolbar1: 'undo redo | bold italic underline strikethrough superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | image media link table hr charmap | ltr rtl | fullscreen | code',
+                    toolbar2: 'fontselect fontsizeselect formatselect',
                     menubar: false,
                     statusbar: false,
                     content_css: process.env.VUE_APP_WEB_URL + 'assets/content.css',
@@ -71,7 +72,15 @@ export default {
                         editor.on('blur', () => {
                             vm.$emit('blur')
                         })
-                    }
+                    },
+                    font_formats : "Andale Mono=andale mono,times;"+
+                        "Arial=arial,helvetica,sans-serif;"+
+                        "Arial Black=arial black,avant garde;"+
+                        "Book Antiqua=book antiqua,palatino;"+
+                        "Comic Sans MS=comic sans ms,sans-serif;"+
+                        "Courier New=courier new,courier;"+
+                        "Helvetica=helvetica;"+
+                        "Tahoma=tahoma,arial,helvetica,sans-serif;"
                 })
             })
         }

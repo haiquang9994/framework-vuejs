@@ -124,7 +124,7 @@ export default {
                 this.processing = true
                 this.$http.post(process.env.VUE_APP_API_ENDPOINT + 'post')
                     .withBody(data)
-                    .authed(this.$store.state.token)
+                    .authed(this.$token())
                     .sent()
                     .then(response => {
                         if (response.status) {
@@ -144,7 +144,7 @@ export default {
                 this.processing = true
                 this.$http.put(process.env.VUE_APP_API_ENDPOINT + 'post/' + this.$route.params.id)
                     .withBody(data)
-                    .authed(this.$store.state.token)
+                    .authed(this.$token())
                     .sent()
                     .then(response => {
                         if (response.status) {
@@ -163,7 +163,7 @@ export default {
     mounted() {
         if (this.mode === 'update') {
             this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post/' + this.$route.params.id)
-                .authed(this.$store.state.token)
+                .authed(this.$token())
                 .sent()
                 .then(response => {
                     if (response.status) {

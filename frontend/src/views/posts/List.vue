@@ -80,7 +80,7 @@ export default {
                 data._orderBy = this.sorter.field + '.' + this.sorter.order
             }
             this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post')
-                .authed(this.$store.state.token)
+                .authed(this.$token())
                 .withBody(data)
                 .sent()
                 .then(response => {
@@ -96,7 +96,7 @@ export default {
         },
         confirm(record) {
             this.$http.delete(process.env.VUE_APP_API_ENDPOINT + 'post/' + record.id)
-                .authed(this.$store.state.token)
+                .authed(this.$token())
                 .sent()
                 .then(response => {
                     if (response.status) {

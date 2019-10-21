@@ -59,7 +59,7 @@ export default {
     methods: {
         click_tab(e, tab) {
             if (e.target.classList.contains('route-tab-enable') && this.$route.fullPath !== tab.fullPath) {
-                this.$router.push(tab.fullPath)
+                this.$go(tab.fullPath)
             }
         },
         do_close_tab(tab) {
@@ -72,7 +72,7 @@ export default {
                 let last_tab_full_path = this.$store.state.layout.tab_history[this.$store.state.layout.tab_history.length - 1]
                 let last_tab = this.$store.state.layout.tabs.find(t => t.fullPath === last_tab_full_path)
                 if (last_tab) {
-                    this.$router.replace(last_tab.fullPath)
+                    this.$go(last_tab.fullPath)
                 }
             }
         },

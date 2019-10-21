@@ -16,7 +16,9 @@ import TinyMce from '@/components/TinyMce'
 import FileManager from '@/components/FileManager.vue'
 import SelectFile from '@/components/SelectFile'
 import UploadFile from '@/components/UploadFile.vue'
+import MyCheckbox from '@/components/MyCheckbox.vue'
 import Vodal from 'vodal'
+import VueCookies from 'vue-cookies'
 
 import 'ant-design-vue/dist/antd.css'
 
@@ -29,6 +31,7 @@ Vue.use(Antd)
 Vue.use(responsive)
 Vue.use(http)
 Vue.use(helpers)
+Vue.use(VueCookies)
 
 Vue.component('fai', FontAwesomeIcon)
 Vue.component('page-title', PageTitle)
@@ -37,6 +40,7 @@ Vue.component(Vodal.name, Vodal)
 Vue.component('file-manager', FileManager)
 Vue.component('select-file', SelectFile)
 Vue.component('upload-file', UploadFile)
+Vue.component('my-checkbox', MyCheckbox)
 
 const unique_list = [
     'profile', 'settings', 'post_list', 'post_update'

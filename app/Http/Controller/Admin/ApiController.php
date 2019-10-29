@@ -19,13 +19,23 @@ abstract class ApiController extends Controller
     {
         $id = $this->request->attributes->get('id');
         if ($id === null) {
-            $result = $this->getService()->getRecords($this->request);
-            if ($result->status) {
-                return [
-                    'status' => true,
-                    'pagination' => $result->pagination,
-                    'data' => $result->data,
-                ];
+            if ($this->request->query->get('is_options')) {
+                $result = $this->getService()->getOptions($this->request);
+                if ($result->status) {
+                    return [
+                        'status' => true,
+                        'data' => $result->options,
+                    ];
+                }
+            } else {
+                $result = $this->getService()->getRecords($this->request);
+                if ($result->status) {
+                    return [
+                        'status' => true,
+                        'pagination' => $result->pagination,
+                        'data' => $result->data,
+                    ];
+                }
             }
         } else {
             $result = $this->getService()->getRecord($this->request);

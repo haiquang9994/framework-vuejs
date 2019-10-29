@@ -19,7 +19,7 @@ export default (to, from, next) => {
                     next()
                 })
                 .catch(() => {
-                    // token = null
+                    VueCookies.remove('token')
                     store.commit('save')
                     next('/login')
                 })

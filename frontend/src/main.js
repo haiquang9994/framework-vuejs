@@ -79,6 +79,12 @@ router.afterEach(current => {
             return tab.fullPath === current.fullPath
         }).length
         if (check === 0) {
+            if (store.state.layout.tabs.length > 7) {
+                let tab = store.state.layout.tabs[1]
+                store.state.layout.tabs.splice(1, 1)
+                let close_i = store.state.layout.tab_history.indexOf(tab.fullPath)
+                store.state.layout.tab_history.splice(close_i, 1)
+            }
             store.state.layout.tabs.push({
                 fullPath: current.fullPath,
                 name: current.name,

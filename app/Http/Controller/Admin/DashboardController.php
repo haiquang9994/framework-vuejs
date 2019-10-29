@@ -35,6 +35,10 @@ class DashboardController extends Controller
         if ($this->container->has('__authed')) {
             $admin = $this->container->get('__authed');
             $admin->fullname = $this->getJsonData('fullname');
+            $password = $this->getJsonData('password');
+            if ($password) {
+                $admin->password = $password;
+            }
             $admin->save();
             return $this->json([
                 'status' => true,

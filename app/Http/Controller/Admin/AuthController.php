@@ -4,7 +4,6 @@ namespace App\Http\Controller\Admin;
 
 use App\Lib\Jwt\Jwt;
 use App\Service\AdminService;
-use App\Service\DBService;
 use App\Service\TokenService;
 
 class AuthController extends Controller

@@ -15,12 +15,12 @@
             <div class="login">
                 <a-form :form="form" @submit="handleSubmit">
                     <a-form-item>
-                        <a-input size="large" placeholder="admin@gmail.com" v-model="email">
+                        <a-input size="large" placeholder="Email" v-model="email">
                             <a-icon slot="prefix" type="user" />
                         </a-input>
                     </a-form-item>
                     <a-form-item>
-                        <a-input size="large" placeholder="1234" v-model="password">
+                        <a-input size="large" placeholder="Password" v-model="password" type="password">
                             <a-icon slot="prefix" type="lock" />
                         </a-input>
                     </a-form-item>
@@ -46,8 +46,8 @@ export default {
         return {
             logging: false,
             rememberMe: false,
-            email: "admin@gmail.com",
-            password: "1234"
+            email: '',
+            password: ''
         }
     },
     beforeCreate() {
@@ -59,7 +59,7 @@ export default {
             e.preventDefault()
             this.logging = true
             this.$http
-                .post(process.env.VUE_APP_API_ENDPOINT + "login")
+                .post(process.env.VUE_APP_API_ENDPOINT + 'login')
                 .withBody({
                     email: this.email,
                     password: this.password
@@ -67,14 +67,21 @@ export default {
                 .sent()
                 .then(body => {
                     if (body.status && body.token) {
-                        this.logging = false
-                        if (this.rememberMe) {
-                            this.$cookies.set('token', body.token, 60 * 60 * 24 * 30)
-                        } else {
-                            this.$cookies.set('token', body.token, 0)
-                        }
-                        this.$c({ token: body.token, user_data: body.user_data, me_loaded: true }, true)
-                        this.$go('/')
+                        setTimeout(() => {
+                            this.logging = false
+                            if (this.rememberMe) {
+                                this.$cookies.set('token', body.token, 60 * 60 * 24 * 30)
+                            } else {
+                                this.$cookies.set('token', body.token, 0)
+                            }
+                            this.$c({ token: body.token, user_data: body.user_data, me_loaded: true }, true)
+                            this.$go('/')
+                        }, 500)
+                    } else {
+                        setTimeout(() => {
+                            this.logging = false
+                            this.$message.info(body.message)
+                        }, 500)
                     }
                 })
                 .catch(() => {

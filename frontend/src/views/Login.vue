@@ -52,6 +52,7 @@ export default {
     },
     beforeCreate() {
         this.form = this.$form.createForm(this)
+        document.title = 'Admin Page | Login'
     },
     methods: {
         handleSubmit(e) {
@@ -60,8 +61,8 @@ export default {
             this.$http
                 .post(process.env.VUE_APP_API_ENDPOINT + "login")
                 .withBody({
-                    email: "admin@gmail.com",
-                    password: "1234"
+                    email: this.email,
+                    password: this.password
                 })
                 .sent()
                 .then(body => {
@@ -74,7 +75,6 @@ export default {
                         }
                         this.$c({ token: body.token, user_data: body.user_data, me_loaded: true }, true)
                         this.$go('/')
-                        411946754
                     }
                 })
                 .catch(() => {

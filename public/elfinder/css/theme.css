@@ -410,3 +410,9 @@
 .elfinder .elfinder-ui-tooltip.ui-widget-shadow {
     box-shadow: 2px 6px 4px -4px #cecdcd;
 }
+
+:not(.elfinder-cwd-icon-directory).elfinder-cwd-icon:before {
+    font-size: 22px;
+    display: block;
+    width: 100%;
+}

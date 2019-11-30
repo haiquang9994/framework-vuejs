@@ -121,7 +121,8 @@ export default {
                     _.push(trim(arguments[i], '/'))
                 }
             }
-            return _.join('/')
+            let url = _.filter(i => i !== '').join('/')
+            return url.startsWith('http') ? url : ('/' + url)
         }
     }
 }

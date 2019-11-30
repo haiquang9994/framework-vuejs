@@ -46,8 +46,9 @@ export default {
                     entity_encoding: 'raw',
                     height: '600px',
                     plugins: 'code lists image media link table hr charmap directionality fullscreen',
-                    toolbar1: 'undo redo | bold italic underline strikethrough superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | image media link table hr charmap | ltr rtl | fullscreen | code',
-                    toolbar2: 'fontselect fontsizeselect formatselect',
+                    toolbar1: 'undo redo | bold italic underline strikethrough superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist',
+                    toolbar2: 'forecolor backcolor removeformat | image media link table hr charmap | ltr rtl | fullscreen | code',
+                    toolbar3: 'fontselect fontsizeselect formatselect',
                     menubar: false,
                     statusbar: false,
                     content_css: process.env.VUE_APP_WEB_URL + 'assets/content.css',
@@ -80,7 +81,16 @@ export default {
                         "Comic Sans MS=comic sans ms,sans-serif;"+
                         "Courier New=courier new,courier;"+
                         "Helvetica=helvetica;"+
-                        "Tahoma=tahoma,arial,helvetica,sans-serif;"
+                        "Tahoma=tahoma,arial,helvetica,sans-serif;",
+                    fontsize_formats: '7px 9px 11px 13px 15px 17px 19px 25px 30px 35px',
+                    formats: {
+                        h1: { block: 'h1' },
+                        h2: { block: 'h2' },
+                        h3: { block: 'h3' },
+                        h4: { block: 'h4' },
+                        h5: { block: 'h5' },
+                        h6: { block: 'h6' },
+                    }
                 })
             })
         }

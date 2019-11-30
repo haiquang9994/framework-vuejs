@@ -17,9 +17,9 @@
             />
         </a-form-item>
         <a-form-item label="Image" :label-col="{ lg: 3 }" :wrapper-col="{ lg: 18 }">
-            <upload-file @change="changeImage" />
+            <upload-file @change="url => { item.image.url = item.image.thumbUrl = url }" />
             <span class="small-space"></span>
-            <select-file @change="changeImage" />
+            <select-file @change="url => { item.image.url = item.image.thumbUrl = url }" />
             <div>
                 <img
                     class="form-thumbnail"
@@ -100,9 +100,6 @@ export default {
         }
     },
     methods: {
-        changeImage(url) {
-            this.item.image.url = this.item.image.thumbUrl = url
-        },
         save() {
             let data = {
                 title: this.item.title,

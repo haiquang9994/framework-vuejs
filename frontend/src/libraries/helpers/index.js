@@ -1,6 +1,7 @@
 import store from '@/store'
 import trim from 'trim-character'
 import VueCookies from 'vue-cookies'
+import queryString from 'query-string'
 
 const Helpers = {
     hasRole(role) {
@@ -35,7 +36,30 @@ const Helpers = {
     },
     getToken() {
         return VueCookies.get('token')
-    }
+    },
+    objectSort(obj) {
+        let ordered = {}
+        Object.keys(obj).sort().forEach(function(key) {
+            ordered[key] = obj[key]
+        })
+        return ordered
+    },
+    removeRfParam(obj) {
+        let result = {}
+        for (let k in obj) {
+            if (k.match(/^rf\d{5}$/) === null) {
+                result[k] = obj[k]
+            }
+        }
+        return result
+    },
+    getQueryParams(url) {
+        let i = url.indexOf('?')
+        if (i > -1) {
+            return queryString.parse(url.substring(i))
+        }
+        return {}
+    },
 }
 
 export default {

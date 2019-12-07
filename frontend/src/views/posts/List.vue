@@ -11,6 +11,9 @@
             :loading="loading"
             @change="handleTableChange"
         >
+            <span slot="image" slot-scope="record">
+                <img :src="record.image" :alt="record.title">
+            </span>
             <div slot="action" slot-scope="record" class="table-record-actions">
                 <a-button size="small" icon="edit" @click="$go('/posts/' + record.id)" />
                 <span class="small-space"></span>
@@ -40,6 +43,11 @@ export default {
                     dataIndex: 'title',
                     sorter: true,
                     width: '30%'
+                },
+                {
+                    title: 'Image',
+                    scopedSlots: { customRender: 'image' },
+                    width: '20%'
                 },
                 {
                     title: 'Summary',

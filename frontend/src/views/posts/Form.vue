@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title title="New Post">
+        <page-title :title="title">
             <a-button :loading="processing" type="primary" @click="save">Save</a-button>
         </page-title>
         <a-form-item
@@ -82,6 +82,7 @@ export default {
                     message: 'Title has length between 1 and 255!'
                 },
             },
+            title: 'New Post',
             item: {
                 title: '',
                 summary: '',
@@ -176,6 +177,8 @@ export default {
                         this.item.featured = data.featured ? 1 : 0
                         this.item.image.url = data.image
                         this.item.image.thumbUrl = data.thumb
+
+                        this.title = 'Update Post [' + data.title + ']'
                     }
                 })
         }

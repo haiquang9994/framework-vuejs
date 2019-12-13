@@ -41,6 +41,13 @@ abstract class ApiService extends BaseService
     public function formatIsoDatetime(Model $model, string $field, string $format = 'Y-m-d H:i:s', $default = null)
     {
         $value = $model->{$field};
+        if (is_string($value)) {
+            if ($date = DateTime::createFromFormat('Y-m-d H:i:s', $value)) {
+                $value = $date;
+            } elseif ($date = DateTime::createFromFormat('Y-m-d', $value)) {
+                $value = $date;
+            }
+        }
         if ($value instanceof DateTime) {
             return $value->format($format);
         }

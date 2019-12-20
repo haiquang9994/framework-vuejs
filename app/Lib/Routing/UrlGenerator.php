@@ -7,6 +7,9 @@ use Symfony\Component\Routing\Generator\UrlGenerator as SymfonyUrlGenerator;
 
 class UrlGenerator
 {
+    /**
+     * @var Router
+     */
     protected $router;
 
     public function __construct(Router $router)

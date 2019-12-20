@@ -19,12 +19,13 @@ class AuthController extends Controller
                 'email' => $admin->email,
                 'fullname' => $admin->fullname,
                 'roles' => $admin->roles,
-                'time' => time(),
-            ], env('APP_KEY', 'app_key'));
-            $this->container->get(TokenService::class)->insert([
+                'first_time' => time(),
+            ]);
+            $this->container->get(TokenService::class)->createNew([
                 'token' => $token,
                 'admin_id' => $admin->id,
-            ]);
+                'last_time' => time(),
+            ])->save();
             return $this->json([
                 'status' => true,
                 'token' => $token,

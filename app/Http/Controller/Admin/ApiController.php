@@ -6,11 +6,11 @@ use App\Service\ApiService;
 
 abstract class ApiController extends Controller
 {
-    abstract protected function getService(): ApiService;
+    abstract protected function getService() : ApiService;
 
     public function index()
     {
-        $method = '___'.strtolower($this->request->getMethod());
+        $method = '___' . strtolower($this->request->getMethod());
         $result = call_user_func_array([$this, $method], []);
         return $this->json($result);
     }

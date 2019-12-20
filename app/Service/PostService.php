@@ -8,7 +8,7 @@ class PostService extends ApiService
 {
     protected $model = '\App\Model\Post';
 
-    public function item(Model $record): array
+    public function item(Model $record) : array
     {
         return [
             'id' => $record->id,

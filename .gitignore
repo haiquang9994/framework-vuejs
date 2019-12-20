@@ -143,5 +143,6 @@ storage/log/**
 storage/cache/**
 !storage/cache/.gitkeep
 public/admin
-public/photos
+public/photos/*
+!public/photos/.gitkeep
 *.lock

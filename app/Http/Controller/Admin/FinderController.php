@@ -15,7 +15,7 @@ class FinderController extends Controller
             : null;
     }
 
-    private function getOptions()
+    private function getOptions() : array
     {
         return [
             'locale' => '',
@@ -30,7 +30,7 @@ class FinderController extends Controller
         ];
     }
 
-    public function connector()
+    public function connector() : void
     {
         $options = $this->getOptions();
         $connector = new elFinderConnector(new elFinder($options));

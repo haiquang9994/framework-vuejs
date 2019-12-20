@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Lib\Data\Result;
+use App\Lib\Support\Result;
 use DateTime;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -13,27 +13,27 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class ApiService extends BaseService
 {
-    protected function newQuery(): Builder
+    protected function newQuery() : Builder
     {
         return $this->query();
     }
 
-    protected function updateQuery(): Builder
+    protected function updateQuery() : Builder
     {
         return $this->newQuery();
     }
 
-    protected function deleteQuery(): Builder
+    protected function deleteQuery() : Builder
     {
         return $this->newQuery();
     }
 
-    protected function queryGet(): Builder
+    protected function queryGet() : Builder
     {
         return $this->newQuery();
     }
 
-    protected function queryFind(): Builder
+    protected function queryFind() : Builder
     {
         return $this->newQuery();
     }
@@ -55,21 +55,21 @@ abstract class ApiService extends BaseService
         return $default;
     }
 
-    public function item(Model $record): array
+    public function item(Model $record) : array
     {
         return [
             'id' => $record->id,
         ];
     }
 
-    public function renderItems(LengthAwarePaginator $records): array
+    public function renderItems(LengthAwarePaginator $records) : array
     {
         return $records->map(function ($record) {
             return $this->item($record);
         })->all();
     }
 
-    public function renderItemsFromCollection(Collection $records): array
+    public function renderItemsFromCollection(Collection $records) : array
     {
         return $records->map(function ($record) {
             return $this->item($record);
@@ -81,7 +81,7 @@ abstract class ApiService extends BaseService
         return $this->item($record);
     }
 
-    public function getRecords(Request $request): Result
+    public function getRecords(Request $request) : Result
     {
         $result = new Result([
             'status' => true,
@@ -115,7 +115,7 @@ abstract class ApiService extends BaseService
         return $result;
     }
 
-    public function getRecord(Request $request): Result
+    public function getRecord(Request $request) : Result
     {
         $result = new Result([
             'status' => true,
@@ -133,7 +133,7 @@ abstract class ApiService extends BaseService
         return $result;
     }
 
-    public function insertRecord(array $data): Result
+    public function insertRecord(array $data) : Result
     {
         return $this->execInTransaction(function () use ($data) {
             $model = $this->createNew($data);
@@ -149,7 +149,7 @@ abstract class ApiService extends BaseService
         });
     }
 
-    public function updateRecord(Request $request, array $data): Result
+    public function updateRecord(Request $request, array $data) : Result
     {
         return $this->execInTransaction(function () use ($request, $data) {
             $query = $this->updateQuery();
@@ -182,7 +182,7 @@ abstract class ApiService extends BaseService
         });
     }
 
-    public function execInTransaction(callable $callback): Result
+    public function execInTransaction(callable $callback) : Result
     {
         $inTransaction = $this->getPdo()->inTransaction();
         if (!$inTransaction) {

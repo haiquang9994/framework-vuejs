@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Lib\Data\Result;
+use App\Lib\Support\Result;
 use App\Model\Admin;
 
 class AdminService extends BaseService

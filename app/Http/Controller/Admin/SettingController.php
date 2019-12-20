@@ -7,7 +7,7 @@ use App\Service\SettingService;
 
 class SettingController extends ApiController
 {
-    protected function getService(): ApiService
+    protected function getService() : ApiService
     {
         return $this->container->get(SettingService::class);
     }

@@ -8,7 +8,7 @@ class SettingService extends ApiService
 {
     protected $model = '\App\Model\Setting';
 
-    public function item(Model $record): array
+    public function item(Model $record) : array
     {
         return [
             'id' => $record->id,

@@ -7,30 +7,36 @@ use Firebase\JWT\JWT as FirebaseJWT;
 
 class Jwt
 {
+    /**
+     * @var FirebaseJWT
+     */
     protected $jwt;
-    protected $privateKey;
 
-    public function __construct(FirebaseJWT $jwt, string $privateKey = 'secret')
+    public function __construct(FirebaseJWT $jwt)
     {
         $this->jwt = $jwt;
-        $this->privateKey = $privateKey;
     }
 
-    public function encode($data, string $key = null)
+    private function getPrivateKey() : string
+    {
+        return md5(env('APP_KEY', 'app_key'));
+    }
+
+    public function encode($data, string $key = null) : string
     {
         if ($key === null) {
-            $key = $this->privateKey;
+            $key = $this->getPrivateKey();
         }
         return FirebaseJWT::encode($data, $key, 'HS256');
     }
 
-    public function decode(string $token, string $key)
+    public function decode(string $token, string $key = null) : array
     {
         try {
             if ($key === null) {
-                $key = $this->privateKey;
+                $key = $this->getPrivateKey();
             }
-            return FirebaseJWT::decode($token, $key, ['HS256']);
+            return (array) FirebaseJWT::decode($token, $key, ['HS256']);
         } catch (DomainException $e) {
             return null;
         }

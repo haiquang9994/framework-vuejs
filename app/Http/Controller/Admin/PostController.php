@@ -7,7 +7,7 @@ use App\Service\PostService;
 
 class PostController extends ApiController
 {
-    protected function getService(): ApiService
+    protected function getService() : ApiService
     {
         return $this->container->get(PostService::class);
     }

@@ -56,18 +56,18 @@ abstract class BaseService
         return $this;
     }
 
-    public function createNew(array $data = []): Model
+    public function createNew(array $data = []) : Model
     {
         $model = $this->model;
         return new $model($data);
     }
 
-    public function getPdo(): PDO
+    public function getPdo() : PDO
     {
         return $this->container->get(Manager::class)->getConnection('default')->getPdo();
     }
 
-    protected function slugify(Model $model, array $fields): string
+    protected function slugify(Model $model, array $fields) : string
     {
         $content = '';
         foreach ($fields as $field) {

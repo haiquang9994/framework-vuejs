@@ -1,11 +1,19 @@
 <?php
+
 namespace App\Http\Controller;
 
 use Pho\Http\Controller;
 
 class BaseController extends Controller
 {
+    /**
+     * @var array
+     */
     protected $data = [];
+
+    /**
+     * @var array|null
+     */
     protected $json_data;
 
     protected function render(string $template, array $data = null, int $status = 200, array $headers = [])

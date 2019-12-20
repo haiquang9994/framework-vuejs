@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Lib\Data;
+namespace App\Lib\Support;
 
 class Result
 {
+    /**
+     * @var array
+     */
     protected $data = [];
 
     public function __construct(array $data = [])

@@ -4,18 +4,20 @@ namespace App\Http\Middleware;
 
 use App\Lib\Jwt\Jwt;
 use App\Model\Admin;
-use App\Service\AdminService;
 use App\Service\TokenService;
-use Psr\Container\ContainerInterface;
+use DI\Container;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiAdminMiddleware
 {
+    /**
+     * @var Container
+     */
     private $container;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
@@ -36,12 +38,6 @@ class ApiAdminMiddleware
                     $this->container->set('__token', $token);
                     return;
                 }
-                // $duration = intval(env('TOKEN_DURATION', 3600));
-                // if ((time() - $data->time) > $duration) {
-                //     return new JsonResponse([
-                //         'status' => false,
-                //     ], 401);
-                // }
             }
         }
         return new JsonResponse([

@@ -1,7 +1,6 @@
 <?php
 namespace App\Http;
 
-use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ApiAdminMiddleware;
 use Pho\Routing\RouteLoader;
 use Pho\Routing\Routing;
@@ -36,15 +35,6 @@ class Router extends RouteLoader
         }, [
             '_before' => [
                 ApiAdminMiddleware::class,
-            ],
-        ]);
-
-        $routing->group('/admin', function ($group) {
-            $group->get('/', $this->to('Admin\Dashboard', 'index'), 'admin/');
-            $group->get('', $this->to('Admin\Dashboard', 'index'), 'admin');
-        }, [
-            '_before' => [
-                AdminMiddleware::class,
             ],
         ]);
     }

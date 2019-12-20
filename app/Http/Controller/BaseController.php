@@ -32,4 +32,9 @@ class BaseController extends Controller
         }
         return isset($this->json_data[$key]) ? $this->json_data[$key] : null;
     }
+
+    protected function redirectBack()
+    {
+        return $this->redirect($this->request->headers->get('referer', '/'));
+    }
 }

@@ -20,9 +20,16 @@ server {
         fastcgi_pass unix:/run/php/php7.3-fpm.sock;
         include fastcgi_params;
     }
+    add_header 'Access-Control-Allow-Origin' '*';
 
+<<<<<<< HEAD
     location ~ /\.ht {
         deny all;
     }
 }
 ```
+=======
+    location ~ \.php$ {
+    ...
+```
+>>>>>>> 72b5f8999c28625556165aac340a9489168631eb

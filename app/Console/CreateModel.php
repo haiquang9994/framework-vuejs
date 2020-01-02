@@ -1,13 +1,13 @@
 <?php
-
 namespace App\Console;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
-class HelloCommand
+class CreateModel
 {
     public function __invoke($name, OutputInterface $output)
     {
-        $output->writeln("Hello ".$name);
+        touch(ROOT_PATH);
+        $output->writeln("Create Model ".$name);
     }
 }

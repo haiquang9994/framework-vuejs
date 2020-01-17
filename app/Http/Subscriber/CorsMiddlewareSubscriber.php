@@ -16,7 +16,7 @@ class CorsMiddlewareSubscriber implements EventSubscriberInterface
             $response = new Response();
             $response->headers->set('Access-Control-Max-Age', '2592000');
             $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            $response->headers->set('Access-Control-Allow-Headers', 'DNT, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Range, Authorization');
             $event->setResponse($response);
         } else {
             $response = $event->getResponse();

@@ -10,11 +10,16 @@ const routes = {
     '/': ['Dashboard', 'dashboard', { active: 'dashboard', use_layout: true, label: 'Dashboard' }, [isLoggedIn]],
     '/login': ['Login', 'login', { use_layout: false, label: 'Login' }, [isGuest]],
     '/settings': ['Settings', 'settings', { active: 'settings', use_layout: true, label: 'Settings' }, [isLoggedIn]],
+    '/profile': ['Profile', 'profile', { active: 'profile', use_layout: true, label: 'Profile' }, [isLoggedIn]],
+    '/finder/popup': ['finder/Popup.vue', 'finder_popup', {}, [isLoggedIn]],
+
     '/posts': ['posts/List', 'post_list', { active: 'post', use_layout: true, label: 'Posts' }, [isLoggedIn]],
     '/posts/new': ['posts/Form', 'post_new', { active: 'post', use_layout: true, label: 'New Post' }, [isLoggedIn]],
     '/posts/:id': ['posts/Form', 'post_update', { active: 'post', use_layout: true, label: 'Update Post' }, [isLoggedIn]],
-    '/profile': ['Profile', 'profile', { active: 'profile', use_layout: true, label: 'Profile' }, [isLoggedIn]],
-    '/finder/popup': ['finder/Popup.vue', 'finder_popup', {}, [isLoggedIn]],
+
+    '/post-categories': ['post-categories/List', 'post_category_list', { active: 'post_category', use_layout: true, label: 'Post Categories' }, [isLoggedIn]],
+    '/post-categories/new': ['post-categories/Form', 'post_category_new', { active: 'post_category', use_layout: true, label: 'New Post Category' }, [isLoggedIn]],
+    '/post-categories/:id': ['post-categories/Form', 'post_category_update', { active: 'post_category', use_layout: true, label: 'Update Post Category' }, [isLoggedIn]],
 }
 
 const vueRoutes = []

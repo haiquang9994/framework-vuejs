@@ -43,12 +43,28 @@ Vue.component('upload-file', UploadFile)
 Vue.component('my-checkbox', MyCheckbox)
 
 const unique_list = [
-    'profile', 'settings', 'post_list', 'post_update'
+    'profile', 'settings',
+    'post_list', 'post_update',
+    'post_category_list', 'post_category_update',
 ]
 
 const not_rf_list = [
     'dashboard', 'login',
 ]
+
+// const check_fullpath_exists_in_history = (history, check) => {
+//     for (let i = 0; i < history.length; i++) {
+//         let item = history[i]
+//         if (item.startsWith(check)) {
+//             return true
+//         }
+//     }
+//     return false
+// }
+
+// const get_in_history_by_fullpath = (history, fullpath) => {
+//     return history.find(t => t.startsWith(fullpath + '?rf') || t.startsWith(fullpath + '&rf'))
+// }
 
 const all_helpers = Vue.prototype.$helpers
 

@@ -27,6 +27,9 @@ class Router extends RouteLoader
             $group->put('/me', $this->to('Admin\Dashboard', 'putMe'), 'api_admin_put_me');
             $group->delete('/logout', $this->to('Admin\Auth', 'logout'), 'api_admin_logout');
 
+            $group->map('GET|POST', '/post/category', $this->to('Admin\PostCategory', 'index'), 'api_admin_post_category');
+            $group->map('GET|PUT|DELETE', '/post/category/{id}', $this->to('Admin\PostCategory', 'index'), 'api_admin_post_category_');
+
             $group->map('GET|POST', '/post', $this->to('Admin\Post', 'index'), 'api_admin_post');
             $group->map('GET|PUT|DELETE', '/post/{id}', $this->to('Admin\Post', 'index'), 'api_admin_post_');
 

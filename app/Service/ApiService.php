@@ -5,37 +5,94 @@ namespace App\Service;
 use App\Lib\Support\Result;
 use DateTime;
 use Exception;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class ApiService extends BaseService
 {
-    protected function newQuery() : Builder
+    protected $apiParameters = null;
+
+    protected $apiFilters = null;
+
+    protected function newQuery(): Builder
     {
         return $this->query();
     }
 
-    protected function updateQuery() : Builder
+    protected function updateQuery(): Builder
     {
         return $this->newQuery();
     }
 
-    protected function deleteQuery() : Builder
+    protected function deleteQuery(): Builder
     {
         return $this->newQuery();
     }
 
-    protected function queryGet() : Builder
+    protected function queryGet(): Builder
     {
         return $this->newQuery();
     }
 
-    protected function queryFind() : Builder
+    protected function queryFind(): Builder
     {
         return $this->newQuery();
+    }
+
+    protected function queryOptions(): Builder
+    {
+        return $this->newQuery();
+    }
+
+    protected function getOptionKeyName()
+    {
+        return 'id';
+    }
+
+    protected function getOptionValueName()
+    {
+        return 'name';
+    }
+
+    protected function getApiParam(string $name = null, $default = null)
+    {
+        if ($this->apiParameters === null) {
+            $this->apiParameters = [];
+            if ($request = $this->container->has('http.request') ? $this->container->get('http.request') : null) {
+                $params = @json_decode($request->query->get('_params', '[]'), true);
+                if (is_array($params)) {
+                    $this->apiParameters = $params;
+                }
+            }
+        }
+        return null === $name ? $this->apiParameters : (array_key_exists($name, $this->apiParameters) ? $this->apiParameters[$name] : $default);
+    }
+
+    protected function getApiParams(): array
+    {
+        return $this->getApiParam(null);
+    }
+
+    protected function getApiFilter(string $name = null, $default = null)
+    {
+        if ($this->apiFilters === null) {
+            $this->apiFilters = [];
+            if ($request = $this->container->has('http.request') ? $this->container->get('http.request') : null) {
+                $params = @json_decode($request->query->get('_filters', '[]'), true);
+                if (is_array($params)) {
+                    $this->apiFilters = $params;
+                }
+            }
+        }
+        return null === $name ? $this->apiFilters : (array_key_exists($name, $this->apiFilters) ? $this->apiFilters[$name] : $default);
+    }
+
+    protected function getApiFilters(): array
+    {
+        return $this->getApiFilter(null);
     }
 
     public function formatIsoDatetime(Model $model, string $field, string $format = 'Y-m-d H:i:s', $default = null)
@@ -55,21 +112,21 @@ abstract class ApiService extends BaseService
         return $default;
     }
 
-    public function item(Model $record) : array
+    public function item(Model $record): array
     {
         return [
             'id' => $record->id,
         ];
     }
 
-    public function renderItems(LengthAwarePaginator $records) : array
+    public function renderItems(LengthAwarePaginator $records): array
     {
         return $records->map(function ($record) {
             return $this->item($record);
         })->all();
     }
 
-    public function renderItemsFromCollection(Collection $records) : array
+    public function renderItemsFromCollection(Collection $records): array
     {
         return $records->map(function ($record) {
             return $this->item($record);
@@ -81,7 +138,7 @@ abstract class ApiService extends BaseService
         return $this->item($record);
     }
 
-    public function getRecords(Request $request) : Result
+    public function getRecords(Request $request): Result
     {
         $result = new Result([
             'status' => true,
@@ -115,7 +172,7 @@ abstract class ApiService extends BaseService
         return $result;
     }
 
-    public function getRecord(Request $request) : Result
+    public function getRecord(Request $request): Result
     {
         $result = new Result([
             'status' => true,
@@ -133,7 +190,24 @@ abstract class ApiService extends BaseService
         return $result;
     }
 
-    public function insertRecord(array $data) : Result
+    public function getOptions(Request $request): Result
+    {
+        $result = new Result([
+            'status' => true,
+        ]);
+        $query = $this->queryOptions($request);
+        $key = $this->getOptionKeyName();
+        $value = $this->getOptionValueName();
+        if ($for_id = $request->query->get('parent_for', null)) {
+            $query->whereNotIn('id', [$for_id]);
+        }
+        $query->orderBy($key, 'asc')->orderBy('id', 'desc');
+        $result->options = $query->pluck($value, $key)->all();
+
+        return $result;
+    }
+
+    public function insertRecord(array $data): Result
     {
         return $this->execInTransaction(function () use ($data) {
             $model = $this->createNew($data);
@@ -149,7 +223,7 @@ abstract class ApiService extends BaseService
         });
     }
 
-    public function updateRecord(Request $request, array $data) : Result
+    public function updateRecord(Request $request, array $data): Result
     {
         return $this->execInTransaction(function () use ($request, $data) {
             $query = $this->updateQuery();
@@ -182,7 +256,7 @@ abstract class ApiService extends BaseService
         });
     }
 
-    public function execInTransaction(callable $callback) : Result
+    public function execInTransaction(callable $callback): Result
     {
         $inTransaction = $this->getPdo()->inTransaction();
         if (!$inTransaction) {

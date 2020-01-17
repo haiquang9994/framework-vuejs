@@ -2,29 +2,37 @@
 
 namespace App\Service;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class PostService extends ApiService
+class PostCategoryService extends ApiService
 {
-    protected $model = '\App\Model\Post';
+    protected $model = '\App\Model\PostCategory';
 
-    public function item(Model $record) : array
+    public function item(Model $record): array
     {
         return [
             'id' => $record->id,
             'name' => $record->name,
             'slug' => $record->slug,
             'description' => $record->description,
-            'content' => $record->content,
-            'published_at' => $this->formatIsoDatetime($record, 'published_at'),
             'active' => $record->active,
-            'featured' => $record->featured,
-            'category_id' => $record->category_id,
-            'image' => $record->image,
-            'thumb' => $record->image,
+            'parent_id' => $record->parent_id,
             'created_at' => $this->formatIsoDatetime($record, 'created_at'),
             'updated_at' => $this->formatIsoDatetime($record, 'updated_at'),
         ];
+    }
+
+    protected function queryGet(): Builder
+    {
+        $query = parent::queryGet();
+        if ($parent_id = $this->getApiParam('parent_id')) {
+            $query->where('parent_id', $parent_id);
+        } else {
+            $query->whereNull('parent_id');
+        }
+
+        return $query;
     }
 
     public function boot()

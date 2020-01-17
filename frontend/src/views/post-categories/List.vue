@@ -1,7 +1,7 @@
 <template>
     <div>
         <page-title title="Posts">
-            <a-button @click="$go('/posts/new')" type="primary">New</a-button>
+            <a-button @click="$go('/post-categories/new')" type="primary">New</a-button>
         </page-title>
         <a-table
             :columns="columns"
@@ -15,7 +15,11 @@
                 <img :src="record.image" :alt="record.title">
             </span>
             <div slot="action" slot-scope="record" class="table-record-actions">
-                <a-button size="small" icon="edit" @click="$go('/posts/' + record.id)" />
+                <a-button size="small" icon="edit" @click="$go('/post-categories/' + record.id)" />
+                <span class="small-space"></span>
+                <a-button size="small" icon="bars" @click="$go('/post-categories?parent_id=' + record.id)" title="Children" />
+                <span class="small-space"></span>
+                <a-button size="small" icon="appstore" @click="$go('/posts?cate_id=' + record.id)" title="Posts" />
                 <span class="small-space"></span>
                 <a-popconfirm
                     title="Are you sure delete this record?"
@@ -33,6 +37,8 @@
 </template>
 
 <script>
+import queryString from 'query-string'
+
 export default {
     data() {
         return {
@@ -43,11 +49,6 @@ export default {
                     dataIndex: 'name',
                     sorter: true,
                     width: '30%'
-                },
-                {
-                    title: 'Image',
-                    scopedSlots: { customRender: 'image' },
-                    width: '20%'
                 },
                 {
                     title: 'Description',
@@ -87,7 +88,9 @@ export default {
             if (this.sorter.field) {
                 data._orderBy = this.sorter.field + '.' + this.sorter.order
             }
-            this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post')
+            let params = queryString.parse(location.href.substring(location.href.indexOf('?')))
+            data._params = params
+            this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post/category')
                 .authed(this.$token())
                 .withBody(data)
                 .sent()
@@ -103,7 +106,7 @@ export default {
                 })
         },
         confirm(record) {
-            this.$http.delete(process.env.VUE_APP_API_ENDPOINT + 'post/' + record.id)
+            this.$http.delete(process.env.VUE_APP_API_ENDPOINT + 'post/category/' + record.id)
                 .authed(this.$token())
                 .sent()
                 .then(response => {

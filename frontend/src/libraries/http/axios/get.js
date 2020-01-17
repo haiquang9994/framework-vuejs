@@ -6,7 +6,11 @@ export default request => {
     let url = request.url
     if (request.body instanceof Object) {
         for (let key in request.body) {
-            url = appendQuery(url, key + '=' + request.body[key])
+            let val = request.body[key]
+            if (typeof val === 'object') {
+                val = JSON.stringify(val)
+            }
+            url = appendQuery(url, key + '=' + val)
         }
     }
     return new Promise((resolve, reject) => {

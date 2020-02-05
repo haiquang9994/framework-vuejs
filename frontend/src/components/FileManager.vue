@@ -20,9 +20,6 @@ export default {
             filemanager: {
                 width: Math.min(window.innerWidth - 200, 1320),
                 height: Math.min(window.innerHeight - 200, 800),
-            },
-            iframe: {
-                url: process.env.VUE_APP_WEB_URL + 'elfinder/index.html?_token=' + this.$store.state.token
             }
         }
     },
@@ -42,12 +39,17 @@ export default {
     watch: {
         '$store.state.file_manager.show': function (show) {
             if (show) {
-                this.$refs.iframe.src = this.iframe.url + '&target=' + this.$store.state.file_manager.target
+                this.$refs.iframe.src = this.iframe_url + '&target=' + this.$store.state.file_manager.target
                 document.scrollingElement.classList.add('file-manager-opened')
             } else {
                 this.$refs.iframe.src = ''
                 document.scrollingElement.classList.remove('file-manager-opened')
             }
+        }
+    },
+    computed: {
+        iframe_url() {
+            return process.env.VUE_APP_WEB_URL + 'elfinder/index.html?_token=' + this.$store.state.token
         }
     }
 }

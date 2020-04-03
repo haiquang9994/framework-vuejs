@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import multiguard from 'vue-router-multiguard'
 import isLoggedIn from './middleware/isLoggedIn'
 import isGuest from './middleware/isGuest'
+import { routerBeforeEach, routerAfterEach } from './tabs'
 
 Vue.use(Router)
 
@@ -35,8 +36,18 @@ for (let path in routes) {
     })
 }
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: vueRoutes,
 })
+
+router.beforeEach((to, from, next) => {
+    return routerBeforeEach(router, to, from, next)
+})
+
+router.afterEach(current => {
+    return routerAfterEach(current)
+})
+
+export default router

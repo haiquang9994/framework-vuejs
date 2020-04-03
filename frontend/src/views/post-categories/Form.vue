@@ -35,7 +35,7 @@
                 class="ant-input"
                 v-model="item.description"
                 placeholder="Enter description of post"
-                :autosize="{ minRows: 3, maxRows: 6 }"
+                :autoSize="{ minRows: 3, maxRows: 6 }"
             />
         </a-form-item>
         <a-form-item label="Active" :label-col="{ lg: 3 }" :wrapper-col="{ lg: 18 }">
@@ -146,7 +146,7 @@ export default {
                         this.item.parent_id = data.parent_id ? data.parent_id.toString() : undefined
                         this.item.active = data.active ? 1 : 0
 
-                        this.title = 'Update Post Category [' + data.name + ']'
+                        // this.title = 'Update Post Category [' + data.name + ']'
                     }
                 })
         }

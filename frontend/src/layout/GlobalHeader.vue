@@ -61,22 +61,20 @@ export default {
                 .authed(this.$token())
                 .sent()
                 .then(() => {
-                    this.$store.state.layout.active_tab = null
-                    this.$store.state.layout.tab_history = []
-                    this.$store.state.layout.tabs = []
-                    this.$cookies.remove('token', null)
-                    this.$c('token', null, true)
-                    this.$go('/login')
+                    this.clean()
                 })
                 .catch(() => {
-                    this.$store.state.layout.active_tab = null
-                    this.$store.state.layout.tab_history = []
-                    this.$store.state.layout.tabs = []
-                    this.$cookies.remove('token', null)
-                    this.$c('token', null, true)
-                    this.$go('/login')
+                    this.clean()
                 })
         },
+        clean() {
+            this.$store.state.layout.active_tab = null
+            this.$store.state.layout.tab_history = []
+            this.$store.state.layout.tabs = this.$store.state.layout.tabs.filter(tab => tab.name == 'dashboard')
+            this.$cookies.remove('token', null)
+            this.$c('token', null, true)
+            this.$go('/login')
+        }
     },
 }
 </script>

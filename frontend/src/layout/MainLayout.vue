@@ -67,10 +67,9 @@ export default {
             this.$store.state.layout.tabs.splice(i, 1)
             let close_i = this.$store.state.layout.tab_history.indexOf(tab.fullPath)
             this.$store.state.layout.tab_history.splice(close_i, 1)
-            let active = this.$store.state.layout.active_tab
-            if (active === tab.fullPath) {
-                let last_tab_full_path = this.$store.state.layout.tab_history[this.$store.state.layout.tab_history.length - 1]
-                let last_tab = this.$store.state.layout.tabs.find(t => t.fullPath === last_tab_full_path)
+            if (this.$store.state.layout.active_tab === tab.fullPath) {
+                let last_tab_full_path = this.$store.state.layout.tab_history[this.$store.state.layout.tab_history.length - 1],
+                    last_tab = this.$store.state.layout.tabs.find(t => t.fullPath === last_tab_full_path)
                 if (last_tab) {
                     this.$go(last_tab.fullPath)
                 }

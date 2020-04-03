@@ -36,6 +36,6 @@ export default new Vuex.Store({
     plugins: [createPersistedState({
         storage: window.localStorage,
         key: '__fw__',
-        paths: ['__', 'token']
+        paths: ['__', 'token', 'layout']
     })]
 })

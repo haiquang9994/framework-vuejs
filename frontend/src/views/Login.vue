@@ -52,7 +52,6 @@ export default {
     },
     beforeCreate() {
         this.form = this.$form.createForm(this)
-        document.title = 'Admin Page | Login'
     },
     methods: {
         handleSubmit(e) {

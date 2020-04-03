@@ -3,7 +3,7 @@ import trim from 'trim-character'
 import VueCookies from 'vue-cookies'
 import queryString from 'query-string'
 
-const Helpers = {
+const helpers = {
     hasRole(role) {
         if (store.state.user_data instanceof Object) {
             let roles = store.state.user_data.roles
@@ -62,9 +62,13 @@ const Helpers = {
     },
 }
 
+export {
+    helpers
+}
+
 export default {
     install: Vue => {
-        Vue.prototype.$helpers = Helpers
+        Vue.prototype.$helpers = helpers
         Vue.prototype.$go = function (path) {
             this.$router.push(path).catch(() => {})
         }

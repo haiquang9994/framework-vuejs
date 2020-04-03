@@ -51,7 +51,7 @@
                 class="ant-input"
                 v-model="item.description"
                 placeholder="Enter description of post"
-                :autosize="{ minRows: 3, maxRows: 6 }"
+                :autoSize="{ minRows: 3, maxRows: 6 }"
             />
         </a-form-item>
         <a-form-item label="Content" :label-col="{ lg: 3 }" :wrapper-col="{ lg: 18 }">

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApiAdminMiddleware
+class AdminMiddleware
 {
     /**
      * @var Container
@@ -26,7 +26,7 @@ class ApiAdminMiddleware
 
     public function __invoke(Request $request)
     {
-        $authorization = $request->headers->get('authorization');
+        $authorization = $request->headers->get('Authorization');
         preg_match("/Bearer (.*)/", $authorization, $matchs);
         $token = $matchs[1] ?? null;
         if ($token === null) {

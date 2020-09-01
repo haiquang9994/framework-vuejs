@@ -1,7 +1,8 @@
 <?php
+
 namespace App\Http;
 
-use App\Http\Middleware\ApiAdminMiddleware;
+use App\Http\Middleware\AdminMiddleware;
 use Pho\Routing\RouteLoader;
 use Pho\Routing\Routing;
 
@@ -9,7 +10,7 @@ class Router extends RouteLoader
 {
     private function to($controller, $method)
     {
-        return '\\App\\Http\Controller\\'.$controller.'Controller::'.$method;
+        return '\\App\\Http\Controller\\' . $controller . 'Controller::' . $method;
     }
 
     public function routes(Routing $routing)
@@ -18,6 +19,7 @@ class Router extends RouteLoader
             $group->get('/', $this->to('Home', 'index'), 'home');
         });
 
+        $routing->get('/api', $this->to('Home', 'api'), 'api');
         $routing->post('/api/admin/login', $this->to('Admin\Auth', 'login'), 'api_admin_login');
         $routing->group('/api/admin', function ($group) {
             $group->map('POST|GET', '/finder/connector', $this->to('Admin\Finder', 'connector'), 'finder_connector');
@@ -37,7 +39,7 @@ class Router extends RouteLoader
             $group->map('PUT', '/settings', $this->to('Admin\Setting', 'save'), 'api_admin_setting_');
         }, [
             '_before' => [
-                ApiAdminMiddleware::class,
+                AdminMiddleware::class,
             ],
         ]);
     }

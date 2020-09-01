@@ -2,7 +2,8 @@
 
 namespace App\Http;
 
-use App\Http\Subscriber\CorsMiddlewareSubscriber;
+use App\Http\Subscriber\CorsSubscriber;
+use App\Http\Subscriber\ErrorSubscriber;
 use Pho\Http\Kernel as PhoKernel;
 
 class Kernel extends PhoKernel
@@ -13,6 +14,7 @@ class Kernel extends PhoKernel
 
     public function events()
     {
-        $this->subscribe(CorsMiddlewareSubscriber::class);
+        $this->subscribe(CorsSubscriber::class);
+        $this->subscribe(ErrorSubscriber::class);
     }
 }

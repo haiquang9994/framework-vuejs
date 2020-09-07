@@ -3,8 +3,11 @@
 namespace App\Http;
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\LocaleMiddleware;
 use Pho\Routing\RouteLoader;
 use Pho\Routing\Routing;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class Router extends RouteLoader
 {
@@ -15,9 +18,19 @@ class Router extends RouteLoader
 
     public function routes(Routing $routing)
     {
-        $routing->group('/', function ($group) {
-            $group->get('/', $this->to('Home', 'index'), 'home');
-        });
+        $routing->group('/{_locale}', function ($group) {
+            $group->get('', $this->to('Home', 'index'), 'home');
+        }, [
+            '_before' => [
+                LocaleMiddleware::class,
+            ],
+            '_locale' => 'en',
+        ], [
+            '_locale' => 'en|de|fr|it',
+        ]);
+        // $routing->group('/', function ($group) {
+        //     $group->get('/', $this->to('Home', 'index'), 'home');
+        // });
 
         $routing->get('/api', $this->to('Home', 'api'), 'api');
         $routing->post('/api/admin/login', $this->to('Admin\Auth', 'login'), 'api_admin_login');
@@ -42,5 +55,9 @@ class Router extends RouteLoader
                 AdminMiddleware::class,
             ],
         ]);
+
+        $routing->get('{_st}/', function (Request $request) {
+            return new RedirectResponse(rtrim($request->getUri(), '/'));
+        }, 'remove_slash', [], ['_st' => '.+']);
     }
 }

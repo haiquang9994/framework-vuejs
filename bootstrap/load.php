@@ -2,13 +2,17 @@
 
 use App\ServiceProvider\WebsiteServiceProvider;
 
-require_once dirname(__FILE__).'/helpers.php';
-$autoloader = (require_once dirname(__DIR__).'/vendor/autoload.php');
+require_once dirname(__FILE__) . '/helpers.php';
+$autoloader = (require_once dirname(__DIR__) . '/vendor/autoload.php');
 
 $dotenv = new Dotenv\Dotenv(dirname(__DIR__));
 $dotenv->load();
 
-require dirname(__FILE__).'/app.php';
+if (!env('DEBUG')) {
+    error_reporting(0);
+}
+
+require dirname(__FILE__) . '/app.php';
 
 // Pho
 $app->register(new Pho\ServiceProvider\PhoServiceProvider(), [
@@ -40,7 +44,7 @@ $app->register(new Pho\ServiceProvider\EloquentServiceProvider(), [
     'db.connection' => [
         'driver' => env('DB_DRIVER', 'mysql'),
         'host' => env('DB_HOST', '127.0.0.1'),
-        'database' => env('DB_NAME', 'test'),
+        'database' => env('DB_NAME', 'nfv'),
         'username' => env('DB_USER', 'root'),
         'password' => env('DB_PASSWORD', ''),
         'charset' => env('DB_CHARSET', 'utf8mb4'),
@@ -49,5 +53,4 @@ $app->register(new Pho\ServiceProvider\EloquentServiceProvider(), [
     ],
 ]);
 
-$app->register(new WebsiteServiceProvider(), [
-]);
+$app->register(new WebsiteServiceProvider(), []);

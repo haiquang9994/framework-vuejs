@@ -67,13 +67,13 @@ abstract class BaseService
         return $this->container->get(Manager::class)->getConnection('default')->getPdo();
     }
 
-    protected function slugify(Model $model, array $fields) : string
+    protected function slugify(Model $model, array $fields, string $separator = null) : string
     {
         $content = '';
         foreach ($fields as $field) {
             $content .= $model->{$field};
         }
-        return $this->container->get(Slugify::class)->slugify($content);
+        return $this->container->get(Slugify::class)->slugify($content, $separator);
     }
 
     public function boot()

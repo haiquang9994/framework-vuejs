@@ -6,6 +6,8 @@ class Admin extends Base
 {
     const ROLE_ADMIN = 'ADMIN';
 
+    protected $table = 'admin';
+
     protected $fillable = [
         'email', 'password', 'fullname', 'roles',
     ];
@@ -13,8 +15,6 @@ class Admin extends Base
     protected $casts = [
         'roles' => 'array',
     ];
-
-    protected $table = 'admins';
 
     protected $hidden = [
         'password',

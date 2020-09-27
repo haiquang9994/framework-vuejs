@@ -4,7 +4,7 @@ namespace App\Model;
 
 class Post extends Base
 {
-    protected $table = 'posts';
+    protected $table = 'post';
 
     protected $fillable = [
         'name', 'description', 'content', 'published_at', 'active', 'featured', 'image', 'category_id',

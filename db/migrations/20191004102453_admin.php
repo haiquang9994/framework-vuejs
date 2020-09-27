@@ -2,11 +2,11 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Admins extends AbstractMigration
+class Admin extends AbstractMigration
 {
     public function change()
     {
-        $this->table('admins', ['collation' => 'utf8_unicode_ci'])
+        $this->table('admin', ['collation' => 'utf8_unicode_ci'])
             ->addColumn('email', 'string', ['null' => true, 'default' => null])
             ->addColumn('password', 'string', ['null' => true, 'default' => null, 'limit' => 62])
             ->addColumn('fullname', 'string', ['null' => true, 'default' => null])

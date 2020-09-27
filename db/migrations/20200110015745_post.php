@@ -2,11 +2,11 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Posts extends AbstractMigration
+class Post extends AbstractMigration
 {
     public function change()
     {
-        $this->table('posts', ['collation' => 'utf8mb4_unicode_ci'])
+        $this->table('post', ['collation' => 'utf8mb4_unicode_ci'])
             ->addColumn('name', 'string', ['null' => true, 'default' => null, 'limit' => 255])
             ->addColumn('slug', 'string', ['null' => true, 'default' => null, 'limit' => 255])
             ->addColumn('description', 'text', ['null' => true, 'default' => null])
@@ -17,6 +17,7 @@ class Posts extends AbstractMigration
             ->addColumn('featured', 'boolean', ['null' => true, 'default' => null])
             ->addColumn('category_id', 'integer', ['null' => true, 'default' => null])
             ->addTimestamps()
+            ->addForeignKey('category_id', 'post_category', 'id', ['delete' => 'CASCADE'])
             ->addIndex('slug', ['unique' => true])
             ->addIndex('active')
             ->addIndex('featured')

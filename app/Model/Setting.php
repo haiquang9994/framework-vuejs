@@ -4,7 +4,7 @@ namespace App\Model;
 
 class Setting extends Base
 {
-    protected $table = 'settings';
+    protected $table = 'setting';
 
     protected $fillable = [
         'key', 'value',

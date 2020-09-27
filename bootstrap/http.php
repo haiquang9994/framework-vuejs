@@ -1,4 +1,5 @@
 <?php
+
 use function DI\autowire;
 
 use App\ServiceProvider\LocaleServiceProvider;

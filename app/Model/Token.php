@@ -4,7 +4,7 @@ namespace App\Model;
 
 class Token extends Base
 {
-    protected $table = 'tokens';
+    protected $table = 'token';
 
     protected $fillable = [
         'admin_id', 'token', 'last_time',

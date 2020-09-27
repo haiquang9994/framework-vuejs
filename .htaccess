@@ -1,0 +1,8 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+   RewriteEngine On
+   RewriteRule admin/(.*) /public/admin/$1 [L]
+   RewriteRule admin.* /public/admin/index.html [L]
+   RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

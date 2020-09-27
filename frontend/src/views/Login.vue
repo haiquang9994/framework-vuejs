@@ -3,7 +3,7 @@
         <div class="content">
             <div class="top">
                 <div class="header">
-                    <img alt="logo" class="logo" :src="$assets('logo.png')" />
+                    <img alt="logo" class="logo" src="@/assets/logo.png" />
                     <span class="title">Admin Page</span>
                 </div>
                 <div class="desc">Login for begin work session.</div>

@@ -4,9 +4,7 @@
             v-responsive.lg.xl
             class="trigger"
             :type="
-                $store.getters.sidebarCollapsed
-                    ? 'menu-unfold'
-                    : 'menu-fold'
+                $store.getters.sidebarCollapsed ? 'menu-unfold' : 'menu-fold'
             "
             @click="() => $store.commit('layout.sidebar.toggle')"
         />

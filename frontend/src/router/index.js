@@ -1,26 +1,26 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import multiguard from 'vue-router-multiguard'
-import isLoggedIn from './middleware/isLoggedIn'
+import isLogged from './middleware/isLogged'
 import isGuest from './middleware/isGuest'
-import { routerBeforeEach, routerAfterEach } from './tabs'
+import store from '@/store'
 
 Vue.use(Router)
 
 const routes = {
-    '/': ['Dashboard', 'dashboard', { active: 'dashboard', use_layout: true, label: 'Dashboard' }, [isLoggedIn]],
-    '/login': ['Login', 'login', { use_layout: false, label: 'Login' }, [isGuest]],
-    '/settings': ['Settings', 'settings', { active: 'settings', use_layout: true, label: 'Settings' }, [isLoggedIn]],
-    '/profile': ['Profile', 'profile', { active: 'profile', use_layout: true, label: 'Profile' }, [isLoggedIn]],
-    '/finder/popup': ['finder/Popup.vue', 'finder_popup', {}, [isLoggedIn]],
+    '/': ['Dashboard', 'dashboard', { active: 'dashboard', layout: true, label: 'Dashboard' }, [isLogged]],
+    '/login': ['Login', 'login', { layout: false, label: 'Login' }, [isGuest]],
+    '/setting': ['Setting', 'setting', { active: 'setting', layout: true, label: 'Setting' }, [isLogged]],
+    '/profile': ['Profile', 'profile', { active: 'profile', layout: true, label: 'Profile' }, [isLogged]],
+    '/finder/popup': ['finder/Popup.vue', 'finder_popup', {}, [isLogged]],
 
-    '/posts': ['posts/List', 'post_list', { active: 'post', use_layout: true, label: 'Posts' }, [isLoggedIn]],
-    '/posts/new': ['posts/Form', 'post_new', { active: 'post', use_layout: true, label: 'New Post' }, [isLoggedIn]],
-    '/posts/:id': ['posts/Form', 'post_update', { active: 'post', use_layout: true, label: 'Update Post' }, [isLoggedIn]],
+    '/post': ['post/List', 'post_list', { active: 'post', layout: true, label: 'List Post' }, [isLogged]],
+    '/post/new': ['post/Form', 'post_new', { active: 'post', layout: true, label: 'New Post' }, [isLogged]],
+    '/post/:id': ['post/Form', 'post_update', { active: 'post', layout: true, label: 'Update Post' }, [isLogged]],
 
-    '/post-categories': ['post-categories/List', 'post_category_list', { active: 'post_category', use_layout: true, label: 'Post Categories' }, [isLoggedIn]],
-    '/post-categories/new': ['post-categories/Form', 'post_category_new', { active: 'post_category', use_layout: true, label: 'New Post Category' }, [isLoggedIn]],
-    '/post-categories/:id': ['post-categories/Form', 'post_category_update', { active: 'post_category', use_layout: true, label: 'Update Post Category' }, [isLoggedIn]],
+    '/category': ['category/List', 'category_list', { active: 'category', layout: true, label: 'List Category' }, [isLogged]],
+    '/category/new': ['category/Form', 'category_new', { active: 'category', layout: true, label: 'New Post Category' }, [isLogged]],
+    '/category/:id': ['category/Form', 'category_update', { active: 'category', layout: true, label: 'Update Post Category' }, [isLogged]],
 }
 
 const vueRoutes = []
@@ -42,12 +42,12 @@ const router = new Router({
     routes: vueRoutes,
 })
 
-router.beforeEach((to, from, next) => {
-    return routerBeforeEach(router, to, from, next)
-})
-
-router.afterEach(current => {
-    return routerAfterEach(current)
+router.afterEach(route => {
+    document.title = 'Admin | ' + route.meta.label
+    store.commit('layout.status', route.meta.layout || false)
+    if (route.meta.active) {
+        store.commit('layout.sidebar.select', route.meta.active)
+    }
 })
 
 export default router

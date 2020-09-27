@@ -1,21 +1,40 @@
 <template>
     <div>
-        <page-title title="Posts">
-            <a-button @click="$go('/posts/new')" type="primary">New</a-button>
+        <page-title title="Category">
+            <text-link type="primary" title="New" href="/category/new" />
         </page-title>
         <a-table
             :columns="columns"
-            :rowKey="record => record.id"
+            :rowKey="(record) => record.id"
             :dataSource="data"
             :pagination="pagination"
             :loading="loading"
             @change="handleTableChange"
         >
             <span slot="image" slot-scope="record">
-                <img :src="record.image" :alt="record.title">
+                <img :src="record.image" :alt="record.title" />
             </span>
             <div slot="action" slot-scope="record" class="table-record-actions">
-                <a-button size="small" icon="edit" @click="$go('/posts/' + record.id)" />
+                <icon-link
+                    size="small"
+                    icon="edit"
+                    title="Update"
+                    :href="'/category/' + record.id"
+                />
+                <span class="small-space"></span>
+                <icon-link
+                    size="small"
+                    icon="bars"
+                    title="Children"
+                    :href="'/category?parent_id=' + record.id"
+                />
+                <span class="small-space"></span>
+                <icon-link
+                    size="small"
+                    icon="appstore"
+                    title="List post"
+                    :href="'/post?cate_id=' + record.id"
+                />
                 <span class="small-space"></span>
                 <a-popconfirm
                     title="Are you sure delete this record?"
@@ -23,7 +42,7 @@
                     okText="Yes"
                     cancelText="No"
                 >
-                    <a-button size="small">
+                    <a-button size="small" title="Delete">
                         <fai :icon="['fas', 'trash']" />
                     </a-button>
                 </a-popconfirm>
@@ -33,6 +52,9 @@
 </template>
 
 <script>
+import queryString from 'query-string'
+import ResizeTable from '@/mixins/ResizeTable'
+
 export default {
     data() {
         return {
@@ -43,11 +65,6 @@ export default {
                     dataIndex: 'name',
                     sorter: true,
                     width: '30%'
-                },
-                {
-                    title: 'Image',
-                    scopedSlots: { customRender: 'image' },
-                    width: '20%'
                 },
                 {
                     title: 'Description',
@@ -62,7 +79,8 @@ export default {
             data: [],
             pagination: {
                 total: 0,
-                pageSize: 0
+                pageSize: 0,
+                position: 'top',
             },
             currentPage: 1,
             sorter: {
@@ -87,7 +105,9 @@ export default {
             if (this.sorter.field) {
                 data._orderBy = this.sorter.field + '.' + this.sorter.order
             }
-            this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post')
+            let params = queryString.parse(location.href.substring(location.href.indexOf('?')))
+            data._params = params
+            this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post/category')
                 .authed(this.$token())
                 .withBody(data)
                 .sent()
@@ -103,7 +123,7 @@ export default {
                 })
         },
         confirm(record) {
-            this.$http.delete(process.env.VUE_APP_API_ENDPOINT + 'post/' + record.id)
+            this.$http.delete(process.env.VUE_APP_API_ENDPOINT + 'post/category/' + record.id)
                 .authed(this.$token())
                 .sent()
                 .then(response => {
@@ -116,14 +136,8 @@ export default {
     mounted() {
         this.pull(1)
     },
-    activated() {
-        if (this.$store.state.tmp.reload) {
-            this.$store.state.tmp.reload = false
-            this.pull(this.currentPage)
-        } else if (this.$store.state.tmp.reload_first_page) {
-            this.$store.state.tmp.reload_first_page = false
-            this.pull(1)
-        }
-    }
+    mixins: [
+        ResizeTable
+    ],
 };
 </script>

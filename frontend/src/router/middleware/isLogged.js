@@ -7,20 +7,20 @@ export default (to, from, next) => {
     if (token === null || token === undefined) {
         next('/login')
     } else {
-        if (store.state.me_loaded) {
+        if (store.getters.userLoaded) {
             next()
         } else {
             Http.get(process.env.VUE_APP_API_ENDPOINT + 'me')
                 .authed(token)
                 .sent()
                 .then(body => {
-                    store.state.user_data = body.user_data
-                    store.state.me_loaded = true
+                    store.commit('user.apply', body.user_data)
+                    store.commit('user.load')
+                    store.commit('layout.global.loader.hide')
                     next()
                 })
                 .catch(() => {
                     VueCookies.remove('token')
-                    store.commit('save')
                     next('/login')
                 })
         }

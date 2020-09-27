@@ -136,7 +136,7 @@ composer.dev.json
 composer.dev.lock
 
 # Pho Framework
-.env*
+.env
 !.env.example
 storage/log/**
 storage/cache/**

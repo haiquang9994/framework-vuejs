@@ -1,25 +1,27 @@
 <template>
     <div>
-        <page-title title="Posts">
-            <a-button @click="$go('/post-categories/new')" type="primary">New</a-button>
+        <page-title title="Post">
+            <text-link type="primary" title="New" href="/post/new" />
         </page-title>
         <a-table
             :columns="columns"
-            :rowKey="record => record.id"
+            :rowKey="(record) => record.id"
             :dataSource="data"
             :pagination="pagination"
             :loading="loading"
+            :scroll="scroll"
             @change="handleTableChange"
         >
             <span slot="image" slot-scope="record">
-                <img :src="record.image" :alt="record.title">
+                <img :src="record.image" :alt="record.title" />
             </span>
             <div slot="action" slot-scope="record" class="table-record-actions">
-                <a-button size="small" icon="edit" @click="$go('/post-categories/' + record.id)" />
-                <span class="small-space"></span>
-                <a-button size="small" icon="bars" @click="$go('/post-categories?parent_id=' + record.id)" title="Children" />
-                <span class="small-space"></span>
-                <a-button size="small" icon="appstore" @click="$go('/posts?cate_id=' + record.id)" title="Posts" />
+                <icon-link
+                    size="small"
+                    icon="edit"
+                    title="Update"
+                    :href="'/post/' + record.id"
+                />
                 <span class="small-space"></span>
                 <a-popconfirm
                     title="Are you sure delete this record?"
@@ -27,7 +29,7 @@
                     okText="Yes"
                     cancelText="No"
                 >
-                    <a-button size="small">
+                    <a-button size="small" title="Delete">
                         <fai :icon="['fas', 'trash']" />
                     </a-button>
                 </a-popconfirm>
@@ -37,7 +39,7 @@
 </template>
 
 <script>
-import queryString from 'query-string'
+import ResizeTable from '@/mixins/ResizeTable'
 
 export default {
     data() {
@@ -48,22 +50,30 @@ export default {
                     title: 'Name',
                     dataIndex: 'name',
                     sorter: true,
-                    width: '30%'
+                    width: 150,
+                },
+                {
+                    title: 'Image',
+                    scopedSlots: { customRender: 'image' },
+                    width: 150,
                 },
                 {
                     title: 'Description',
                     dataIndex: 'description',
+                    width: 200,
                 },
                 {
                     title: 'Action',
                     key: 'action',
                     scopedSlots: { customRender: 'action' },
+                    width: 100,
                 },
             ],
             data: [],
             pagination: {
                 total: 0,
-                pageSize: 0
+                pageSize: 0,
+                position: 'top',
             },
             currentPage: 1,
             sorter: {
@@ -88,9 +98,7 @@ export default {
             if (this.sorter.field) {
                 data._orderBy = this.sorter.field + '.' + this.sorter.order
             }
-            let params = queryString.parse(location.href.substring(location.href.indexOf('?')))
-            data._params = params
-            this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post/category')
+            this.$http.get(process.env.VUE_APP_API_ENDPOINT + 'post')
                 .authed(this.$token())
                 .withBody(data)
                 .sent()
@@ -106,7 +114,7 @@ export default {
                 })
         },
         confirm(record) {
-            this.$http.delete(process.env.VUE_APP_API_ENDPOINT + 'post/category/' + record.id)
+            this.$http.delete(process.env.VUE_APP_API_ENDPOINT + 'post/' + record.id)
                 .authed(this.$token())
                 .sent()
                 .then(response => {
@@ -119,14 +127,8 @@ export default {
     mounted() {
         this.pull(1)
     },
-    activated() {
-        if (this.$store.state.tmp.reload) {
-            this.$store.state.tmp.reload = false
-            this.pull(this.currentPage)
-        } else if (this.$store.state.tmp.reload_first_page) {
-            this.$store.state.tmp.reload_first_page = false
-            this.pull(1)
-        }
-    }
+    mixins: [
+        ResizeTable
+    ]
 };
 </script>

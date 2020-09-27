@@ -4,38 +4,78 @@ import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const layout = {
     state: {
-        __: false,
-        file_manager: {
-            show: false,
-            target: null
-        },
-        user_data: {},
-        me_loaded: false,
-        token: null,
-        layout: {
-            use_layout: false,
-            tabs: [
-                { name: 'dashboard', label: 'Dashboard', path: '/', fullPath: '/', component: 'Dashboard' }
-            ],
-            tab_history: ['/']
-        },
-        tmp: {},
-        activeMenu: [],
-    },
-    getters: {
+        enable: true,
+        sidebarCollapsed: false,
+        sidebarSelected: [],
+        globalLoaderState: true,
     },
     mutations: {
-        save(state) {
-            state.__ = !state.__
-        }
+        'layout.status'(state, status) {
+            state.enable = status
+        },
+        'layout.sidebar.toggle'(state) {
+            state.sidebarCollapsed = !state.sidebarCollapsed
+        },
+        'layout.sidebar.select'(state, name) {
+            state.sidebarSelected = [name]
+        },
+        'layout.global.loader.hide'(state) {
+            state.globalLoaderState = false
+        },
     },
-    actions: {
+    getters: {
+        sidebarCollapsed(state) {
+            return state.sidebarCollapsed
+        },
+        sidebarSelected(state) {
+            return state.sidebarSelected
+        },
+        globalLoaderState(state) {
+            return state.globalLoaderState
+        },
+    },
+}
+
+const user = {
+    state: {
+        data: {},
+        loaded: false,
+    },
+    mutations: {
+        'user.apply'(state, data) {
+            state.data = data
+        },
+        'user.load'(state) {
+            state.loaded = true
+        },
+        'user.unload'(state) {
+            state.loaded = false
+        },
+    },
+    getters: {
+        user: (state) => state.data,
+        userLoaded: (state) => state.loaded,
+    },
+}
+
+const fileManager = {
+    state: {
+        enable: false,
+        target: null,
+    },
+}
+
+export default new Vuex.Store({
+    modules: {
+        layout,
+        user,
+        fileManager,
     },
     plugins: [createPersistedState({
         storage: window.localStorage,
-        key: '__fw__',
-        paths: ['__', 'token', 'layout']
-    })]
+        key: '__vfn__',
+        paths: ['layout.sidebarCollapsed']
+    })],
 })

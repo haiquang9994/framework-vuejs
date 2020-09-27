@@ -17,7 +17,7 @@
 export default {
     data() {
         return {
-            uploadEndPoint: this.$mergeUrl(process.env.VUE_APP_API_ENDPOINT, 'finder/upload?_token=' + this.$store.state.token)
+            uploadEndPoint: this.$mergeUrl(process.env.VUE_APP_API_ENDPOINT, 'finder/upload?_token=' + this.$cookies.get('token'))
         }
     },
     props: {

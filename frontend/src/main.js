@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './App.vue'
+import App from './App'
 import router from '@/router'
 import store from '@/store'
 import Antd from 'ant-design-vue'
@@ -14,7 +14,8 @@ import TinyMce from '@/components/TinyMce'
 import FileManager from '@/components/FileManager.vue'
 import SelectFile from '@/components/SelectFile'
 import UploadFile from '@/components/UploadFile.vue'
-import MyCheckbox from '@/components/MyCheckbox.vue'
+import TextLink from '@/components/TextLink.vue'
+import IconLink from '@/components/IconLink.vue'
 import Vodal from 'vodal'
 import VueCookies from 'vue-cookies'
 
@@ -38,7 +39,8 @@ Vue.component('vodal', Vodal)
 Vue.component('file-manager', FileManager)
 Vue.component('select-file', SelectFile)
 Vue.component('upload-file', UploadFile)
-Vue.component('my-checkbox', MyCheckbox)
+Vue.component('text-link', TextLink)
+Vue.component('icon-link', IconLink)
 
 new Vue({
     router,

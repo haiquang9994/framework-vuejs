@@ -8,7 +8,7 @@
             <a-input v-model="profile.fullname"></a-input>
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 12, offset: 5 }" :style="{marginBottom: change_password ? 0 : ''}">
-            <my-checkbox v-model="change_password">I want change password</my-checkbox>
+            <a-checkbox v-model="change_password">I want change password</a-checkbox>
         </a-form-item>
         <a-form-item v-if="change_password" label="Password" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
             <a-input v-model="profile.password" placeholder="********" type="password"></a-input>
@@ -26,8 +26,8 @@ export default {
             processing: false,
             change_password: false,
             profile: {
-                fullname: this.$store.state.user_data.fullname,
-                email: this.$store.state.user_data.email,
+                fullname: this.$store.getters.user.fullname,
+                email: this.$store.getters.user.email,
                 password: '',
             }
         }
@@ -45,7 +45,7 @@ export default {
                 .then(body => {
                     if (body.status) {
                         this.processing = false
-                        this.$store.state.user_data = body.user_data
+                        this.$store.getters.user = body.user_data
                         this.$message.info(body.message)
                         this.change_password = false
                         this.profile.password = ''

@@ -41,14 +41,14 @@ export default {
             }
         }
     },
-    deactivated() {
+    destroyed() {
         if (this.editor) {
             this.cache = this.editor.getContent()
             this.editor.destroy()
             this.editor = null
         }
     },
-    activated() {
+    mounted() {
         this.init()
     },
     methods: {

@@ -25,7 +25,8 @@
         "barryvdh/elfinder-flysystem-driver": "^0.2.1",
         "studio-42/elfinder": "^2.1",
         "evenement/evenement": "^3.0",
-        "illuminate/pagination": "v5.8"
+        "illuminate/pagination": "v5.8",
+        "guzzlehttp/guzzle": "^7.0"
     },
     "autoload": {
         "psr-4": {

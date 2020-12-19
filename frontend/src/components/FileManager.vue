@@ -1,8 +1,8 @@
 <template>
     <vodal
-        :show="$store.state.file_manager.show"
+        :show="$store.state.fileManager.enable"
         animation="zoom"
-        @hide="$store.state.file_manager.show = false"
+        @hide="$store.state.fileManager.enable = false"
         :width="filemanager.width"
         :height="filemanager.height"
         :customStyles="{padding: '0'}"
@@ -37,9 +37,9 @@ export default {
         })
     },
     watch: {
-        '$store.state.file_manager.show': function (show) {
+        '$store.state.fileManager.enable': function (show) {
             if (show) {
-                this.$refs.iframe.src = this.iframe_url + '&target=' + this.$store.state.file_manager.target
+                this.$refs.iframe.src = this.iframe_url + '&target=' + this.$store.state.fileManager.target
                 document.scrollingElement.classList.add('file-manager-opened')
             } else {
                 this.$refs.iframe.src = ''
@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         iframe_url() {
-            return process.env.VUE_APP_WEB_URL + 'elfinder/index.html?_token=' + this.$store.state.token
+            return process.env.VUE_APP_WEB_URL + 'elfinder/index.html?_token=' + this.$cookies.get('token')
         }
     }
 }

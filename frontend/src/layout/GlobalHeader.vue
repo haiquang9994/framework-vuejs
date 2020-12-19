@@ -3,30 +3,44 @@
         <a-icon
             v-responsive.lg.xl
             class="trigger"
-            :type="sidebarOptions.collapsed ? 'menu-unfold' : 'menu-fold'"
-            @click="()=> sidebarOptions.collapsed = !sidebarOptions.collapsed"
+            :type="
+                $store.getters.sidebarCollapsed ? 'menu-unfold' : 'menu-fold'
+            "
+            @click="() => $store.commit('layout.sidebar.toggle')"
         />
         <div class="global-header-right">
-            <a-dropdown id="header-header-notice" class="header-item" :trigger="['click']">
+            <a-dropdown
+                id="header-header-notice"
+                class="header-item"
+                :trigger="['click']"
+            >
                 <span class="header-notice">
-                    <a-badge count="12">
+                    <a-badge count="3">
                         <a-icon :class="['header-notice-icon']" type="bell" />
                     </a-badge>
                 </span>
                 <template slot="overlay">
                     <a-list class="header-notice-list">
-                        <a-list-item class="header-notice-item">Notice 1</a-list-item>
-                        <a-list-item class="header-notice-item">Notice 2</a-list-item>
-                        <a-list-item class="header-notice-item">Notice 3</a-list-item>
+                        <a-list-item class="header-notice-item"
+                            >Notice 1</a-list-item
+                        >
+                        <a-list-item class="header-notice-item"
+                            >Notice 2</a-list-item
+                        >
+                        <a-list-item class="header-notice-item"
+                            >Notice 3</a-list-item
+                        >
                     </a-list>
                 </template>
             </a-dropdown>
-            <a-dropdown class="header-item" id="account-options" :trigger="['hover']">
+            <a-dropdown
+                class="header-item"
+                id="account-options"
+                :trigger="['hover']"
+            >
                 <span>
-                    <a-avatar
-                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    />
-                    <span>{{ $store.state.user_data.fullname }}</span>
+                    <a-avatar :src="$assets('user.png')" />
+                    <span>{{ $store.getters.user.fullname }}</span>
                 </span>
                 <a-menu slot="overlay">
                     <a-menu-item @click="$go('/profile')">
@@ -43,8 +57,6 @@
 
 <script>
 export default {
-    name: 'GlobalHeader',
-    props: ['sidebarOptions'],
     methods: {
         fetchNotice() {
             if (this.loadding) {
@@ -61,22 +73,17 @@ export default {
                 .authed(this.$token())
                 .sent()
                 .then(() => {
-                    this.$store.state.layout.active_tab = null
-                    this.$store.state.layout.tab_history = []
-                    this.$store.state.layout.tabs = []
-                    this.$cookies.remove('token', null)
-                    this.$c('token', null, true)
-                    this.$go('/login')
+                    this.clean()
                 })
                 .catch(() => {
-                    this.$store.state.layout.active_tab = null
-                    this.$store.state.layout.tab_history = []
-                    this.$store.state.layout.tabs = []
-                    this.$cookies.remove('token', null)
-                    this.$c('token', null, true)
-                    this.$go('/login')
+                    this.clean()
                 })
         },
+        clean() {
+            this.$cookies.remove('token', null)
+            this.$store.commit('user.unload')
+            this.$go('/login')
+        }
     },
 }
 </script>

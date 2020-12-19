@@ -4,7 +4,6 @@
 
 <script>
 import tinymce from 'tinymce'
-import 'tinymce/skins/lightgray/skin.min.css'
 import 'tinymce/themes/modern'
 import 'tinymce/plugins/code'
 import 'tinymce/plugins/lists'
@@ -42,14 +41,14 @@ export default {
             }
         }
     },
-    deactivated() {
+    destroyed() {
         if (this.editor) {
             this.cache = this.editor.getContent()
             this.editor.destroy()
             this.editor = null
         }
     },
-    activated() {
+    mounted() {
         this.init()
     },
     methods: {
@@ -85,7 +84,7 @@ export default {
                     return false
                 },
                 entity_encoding: 'raw',
-                height: '600px',
+                height: '400px',
                 plugins: 'code lists image media link table hr charmap directionality fullscreen',
                 toolbar1: 'undo redo | bold italic underline strikethrough superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist',
                 toolbar2: 'forecolor backcolor removeformat | image media link table hr charmap | ltr rtl | fullscreen | code',

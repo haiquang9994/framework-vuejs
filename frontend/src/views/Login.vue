@@ -3,38 +3,47 @@
         <div class="content">
             <div class="top">
                 <div class="header">
-                    <img
-                        alt="logo"
-                        class="logo"
-                        src="https://iczer.gitee.io/vue-antd-pro/static/img/vue-antd-logo.png"
-                    />
+                    <img alt="logo" class="logo" src="@/assets/logo.png" />
                     <span class="title">Admin Page</span>
                 </div>
                 <div class="desc">Login for begin work session.</div>
             </div>
             <div class="login">
-                <a-form :form="form" @submit="handleSubmit">
-                    <a-form-item>
-                        <a-input size="large" placeholder="Email" v-model="email">
-                            <a-icon slot="prefix" type="user" />
-                        </a-input>
-                    </a-form-item>
-                    <a-form-item>
-                        <a-input size="large" placeholder="Password" v-model="password" type="password">
-                            <a-icon slot="prefix" type="lock" />
-                        </a-input>
-                    </a-form-item>
-                    <my-checkbox v-model="rememberMe">Remember me</my-checkbox>
-                    <a-form-item>
-                        <a-button
-                            style="width: 100%;margin-top: 24px"
-                            size="large"
-                            htmlType="submit"
-                            type="primary"
-                            :loading="logging"
-                        >Login</a-button>
-                    </a-form-item>
-                </a-form>
+                <a-form-item>
+                    <a-input
+                        size="large"
+                        placeholder="Email"
+                        v-model="email"
+                        @keydown.enter="handleSubmit"
+                    >
+                        <a-icon slot="prefix" type="user" />
+                    </a-input>
+                </a-form-item>
+                <a-form-item>
+                    <a-input
+                        size="large"
+                        placeholder="Password"
+                        v-model="password"
+                        type="password"
+                        @keydown.enter="handleSubmit"
+                    >
+                        <a-icon slot="prefix" type="lock" />
+                    </a-input>
+                </a-form-item>
+                <a-form-item>
+                    <a-checkbox v-model="rememberMe">Remember me</a-checkbox>
+                </a-form-item>
+                <a-form-item>
+                    <a-button
+                        style="width: 100%; margin-top: 24px"
+                        size="large"
+                        htmlType="submit"
+                        type="primary"
+                        @click="handleSubmit"
+                        :loading="processing"
+                        >Login</a-button
+                    >
+                </a-form-item>
             </div>
         </div>
     </div>
@@ -44,20 +53,21 @@
 export default {
     data() {
         return {
-            logging: false,
+            processing: false,
             rememberMe: false,
-            email: '',
-            password: ''
+            email: 'admin@gmail.com',
+            password: '1234',
         }
     },
     beforeCreate() {
         this.form = this.$form.createForm(this)
-        document.title = 'Admin Page | Login'
+    },
+    mounted() {
+        this.$store.commit('layout.global.loader.hide')
     },
     methods: {
-        handleSubmit(e) {
-            e.preventDefault()
-            this.logging = true
+        handleSubmit() {
+            this.processing = true
             this.$http
                 .post(process.env.VUE_APP_API_ENDPOINT + 'login')
                 .withBody({
@@ -68,24 +78,25 @@ export default {
                 .then(body => {
                     if (body.status && body.token) {
                         setTimeout(() => {
-                            this.logging = false
+                            this.processing = false
                             if (this.rememberMe) {
                                 this.$cookies.set('token', body.token, 60 * 60 * 24 * 30)
                             } else {
                                 this.$cookies.set('token', body.token, 0)
                             }
-                            this.$c({ token: body.token, user_data: body.user_data, me_loaded: true }, true)
-                            this.$go('/')
+                            this.$store.commit('user.apply', body.user_data)
+                            this.$store.commit('user.load')
+                            this.$go('/', true)
                         }, 500)
                     } else {
                         setTimeout(() => {
-                            this.logging = false
+                            this.processing = false
                             this.$message.info(body.message)
                         }, 500)
                     }
                 })
                 .catch(() => {
-                    this.logging = false
+                    this.processing = false
                 })
         }
     },

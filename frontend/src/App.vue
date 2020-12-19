@@ -1,8 +1,8 @@
 <template>
     <section>
-        <main-layout v-if="$store.state.layout.use_layout"></main-layout>
+        <main-layout v-if="$store.state.layout.enable"></main-layout>
         <router-view v-else></router-view>
-        <loading id="loader-wrapper" :active.sync="loaderVisible" loader="dots"></loading>
+        <loading id="loader-wrapper" :active.sync="$store.getters.globalLoaderState" loader="dots"></loading>
         <file-manager/>
     </section>
 </template>
@@ -18,13 +18,11 @@ export default {
     data() {
         return {
             loaderVisible: true,
-            use_layout: null,
         }
     },
     mounted() {
-        let app = this
         setTimeout(() => {
-            app.loaderVisible = false
+            // this.loaderVisible = false
         }, 500)
     }
 }

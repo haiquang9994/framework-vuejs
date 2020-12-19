@@ -3,10 +3,10 @@ import trim from 'trim-character'
 import VueCookies from 'vue-cookies'
 import queryString from 'query-string'
 
-const Helpers = {
+const helpers = {
     hasRole(role) {
-        if (store.state.user_data instanceof Object) {
-            let roles = store.state.user_data.roles
+        if (store.getters.user instanceof Object) {
+            let roles = store.getters.user.roles
             if (roles instanceof Array) {
                 if (roles.indexOf('ADMIN') > -1) {
                     return true
@@ -62,11 +62,24 @@ const Helpers = {
     },
 }
 
+export {
+    helpers
+}
+
+const images = require.context('@/assets/', false, /\.png$|\.jpg$/)
+
 export default {
     install: Vue => {
-        Vue.prototype.$helpers = Helpers
-        Vue.prototype.$go = function (path) {
-            this.$router.push(path).catch(() => {})
+        Vue.prototype.$helpers = helpers
+        Vue.prototype.$assets = function (url) {
+            return images('./' + url)
+        }
+        Vue.prototype.$go = function (path, replace = false) {
+            if (replace === true) {
+                this.$router.replace(path).catch(() => {})
+            } else {
+                this.$router.push(path).catch(() => {})
+            }
         }
         Vue.prototype.$log = function (data) {
             console.log(data)
@@ -95,48 +108,15 @@ export default {
             }
             return status
         }
-        Vue.prototype.$replaceActiveTab = function (path, find_old_tab) {
-            this.$store.state.layout.tab_history.pop()
-            this.$store.state.layout.tabs.pop()
-            if (path === undefined) {
-                return
-            }
-            if (find_old_tab === true) {
-                let tab = this.$store.state.layout.tabs.find(t => t.path === path)
-                if (tab !== undefined) {
-                    this.$router.push(tab.fullPath)
-                    return
-                }
-            }
-            this.$router.push(path)
-        }
-        Vue.prototype.$c = function () {
-            let args = arguments
-            if (args[0] === undefined) {
-                throw "Parameter 1 of c method can't be undefined!"
-            } else if (args[0] instanceof Object) {
-                for (let k in args[0]) {
-                    this.$store.state[k] = args[0][k]
-                }
-                if (args[1]) {
-                    this.$store.commit('save')
-                }
-            } else if (typeof args[0] === 'string') {
-                this.$store.state[args[0]] = args[1]
-                if (args[2] === true) {
-                    this.$store.commit('save')
-                }
-            }
-        }
         Vue.prototype.$token = function () {
             return this.$cookies.get('token')
         }
         Vue.prototype.$filemanagerOpen = function (target) {
-            this.$store.state.file_manager.target = target
-            this.$store.state.file_manager.show = true
+            this.$store.state.fileManager.target = target
+            this.$store.state.fileManager.enable = true
         }
         Vue.prototype.$filemanagerClose = function () {
-            this.$store.state.file_manager.show = false
+            this.$store.state.fileManager.enable = false
         }
         Vue.prototype.$mergeUrl = function () {
             let _ = []

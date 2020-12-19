@@ -4,7 +4,7 @@ namespace App\Model;
 
 class PostCategory extends Base
 {
-    protected $table = 'post_categories';
+    protected $table = 'post_category';
 
     protected $fillable = [
         'name', 'description', 'parent_id', 'active',

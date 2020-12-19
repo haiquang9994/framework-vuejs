@@ -136,13 +136,11 @@ composer.dev.json
 composer.dev.lock
 
 # Pho Framework
-.env*
+.env
 !.env.example
 storage/log/**
-!storage/log/.gitkeep
 storage/cache/**
-!storage/cache/.gitkeep
 public/admin
 public/photos/*
-!public/photos/.gitkeep
 *.lock
+!.gitkeep

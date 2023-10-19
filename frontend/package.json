@@ -14,7 +14,7 @@
     "append-query": "^2.1.0",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
-    "tinymce": "4.9.6",
+    "tinymce": "5.10.8",
     "trim-character": "^2.0.1",
     "validator": "^13.1.17",
     "vodal": "^2.4.0",
